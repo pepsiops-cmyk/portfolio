@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chatbot creation form: after</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page: #0e0f12;
+    --card: #17181c;
+    --card-border: #26282e;
+    --text: #eceef1;
+    --text-2: #a9adb6;
+    --text-3: #8a8e97;
+    --line: #444851;
+    --fill: #26282e;
+    --fill-hover: #30333a;
+    --accent: #8b7cff;
+    --accent-dim: #3b3570;
+    --req: #f2857f;
+    --badge-bg: #2e2208;
+    --badge-fg: #f1a92c;
+    --r: 8px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--page); color: var(--text);
+    font-family: Inter, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 16px; }
+  body { padding: 32px 16px; }
+  button, input, textarea { font: inherit; color: inherit; }
+
+  .card { max-width: 750px; margin: 0 auto; background: var(--card);
+    border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; }
+  .head { display: flex; justify-content: space-between; align-items: center; }
+  .head h1 { font-size: 24px; font-weight: 700; margin: 0; }
+  .link { color: var(--accent); text-decoration: none; font-size: 15px; }
+  .link:hover { text-decoration: underline; }
+
+  form { display: flex; flex-direction: column; gap: 24px; padding-top: 24px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .label-row { display: flex; align-items: center; justify-content: space-between; min-height: 28px; }
+  .label { display: flex; align-items: center; gap: 4px; font-weight: 500; font-size: 16px; }
+  .req { color: var(--req); font-weight: 400; }
+  .info { display: inline-flex; color: var(--text-3); cursor: pointer; }
+  .info svg { width: 16px; height: 16px; }
+  .help { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; line-height: 16px; color: var(--text-2); }
+  .count { color: var(--text-3); white-space: nowrap; margin-left: auto; }
+
+  .input, textarea { width: 100%; background: transparent; border: none; outline: none;
+    box-shadow: inset 0 0 0 1px var(--line); border-radius: var(--r);
+    padding: 10px; line-height: 24px; color: var(--text); transition: box-shadow .15s; }
+  .input:focus, textarea:focus { box-shadow: inset 0 0 0 1px var(--accent); }
+  ::placeholder { color: var(--text-3); }
+  textarea { resize: none; overflow: hidden; display: block; min-height: 46px; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 36px; padding: 0 13px; border-radius: var(--r); font-size: 14px; font-weight: 500;
+    cursor: pointer; border: 1px solid var(--line); background: transparent; white-space: nowrap; }
+  .btn:hover { background: var(--fill); }
+  .btn svg { width: 20px; height: 20px; }
+  .btn.filled { background: var(--fill); border-color: transparent; }
+  .btn.filled:hover { background: var(--fill-hover); }
+  .btn.on { background: var(--text); color: #0e0f12; border-color: transparent; }
+  .btn.icon { width: 32px; height: 28px; padding: 0; border: none; background: var(--fill); opacity: .5; cursor: default; }
+  .btn.icon svg { width: 16px; height: 16px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .split { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+
+  .switch { position: relative; width: 51px; height: 27px; flex: none; }
+  .switch input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .track { position: absolute; inset: 0; border-radius: 999px; background: var(--text-3); transition: background .2s; pointer-events: none; }
+  .thumb { position: absolute; top: 2px; left: 2px; width: 23px; height: 23px; border-radius: 50%; background: #fff; transition: transform .2s; pointer-events: none; }
+  .switch input:checked ~ .track { background: var(--accent); }
+  .switch input:checked ~ .thumb { transform: translateX(24px); }
+  .switch input:disabled { cursor: not-allowed; }
+  .dim { opacity: .5; }
+  .toggle-text .t { font-weight: 500; }
+  .toggle-text .d { font-size: 12px; color: var(--text-2); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; box-shadow: inset 0 0 0 1px var(--line);
+    border-radius: var(--r); padding: 7px 10px; min-height: 44px; }
+  .tags:focus-within { box-shadow: inset 0 0 0 1px var(--accent); }
+  .tags input { flex: 1; min-width: 120px; background: transparent; border: none; outline: none; line-height: 24px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; background: var(--fill); border-radius: 6px; padding: 2px 8px; font-size: 14px; }
+  .chip button { background: none; border: none; color: var(--text-3); cursor: pointer; padding: 0; line-height: 1; font-size: 16px; }
+
+  .adv { --bleed: 20px; --pad: 16px; margin: 0; border: 1px solid var(--card-border); border-radius: 12px; background: #1c1d22;
+    transition: margin .25s ease, border-radius .25s ease; }
+  .adv.open { --pad: var(--bleed); margin: 0 calc(-1 * var(--bleed)); border-radius: 0; border-left: none; border-right: none; border-bottom: none; }
+  .adv-sticky { position: sticky; top: 0; z-index: 5; background: #1c1d22; border-radius: 11px; overflow: hidden; }
+  .adv.open .adv-sticky { border-radius: 0; }
+  .adv-head { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px var(--pad); background: transparent; border: none; cursor: pointer; text-align: left; transition: background .15s; }
+  .adv-head:hover { background: #222329; }
+  .adv-head .t { font-weight: 500; font-size: 16px; }
+  .adv-head .d { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+  .adv-head .right { display: flex; align-items: center; gap: 10px; flex: none; }
+  .q-label { font-size: 12px; color: var(--text-2); white-space: nowrap; }
+  .q-label b { font-weight: 500; color: var(--text); }
+  .adv-head .chev { width: 20px; height: 20px; color: var(--text-2); }
+  .adv-body { display: none; flex-direction: column; gap: 14px; padding: 16px var(--pad) 18px; }
+  .adv.open .adv-body { display: flex; }
+  .q-track { height: 4px; background: var(--fill); }
+  .q-fill { height: 100%; width: 0; background: linear-gradient(90deg, #5a4bd1, var(--accent) 55%, #c4bbff); transition: width .3s ease; }
+  .adv .chev { transition: transform .2s; }
+  .adv.open .chev { transform: rotate(180deg); }
+  .addon { display: flex; flex-direction: column; gap: 8px; }
+  .badge { font-size: 12px; font-weight: 500; background: var(--badge-bg); color: var(--badge-fg); padding: 2px 7px; border-radius: 3px; }
+
+  /* Ghost previews */
+  .ghost { display: flex; align-items: center; gap: 16px; width: 100%;
+    border: 1.5px dashed var(--line); border-radius: 10px; padding: 14px 14px 14px 16px; background: transparent; }
+  .ghost .g-body { flex: 1; min-width: 0; display: flex; gap: 14px; align-items: center; opacity: .5; }
+  .ghost .btn { flex: none; }
+  .ghost { transition: border-color .15s; }
+  .ghost { cursor: pointer; }
+  .ghost.attached { cursor: default; }
+  .ghost:hover { border-color: var(--accent); }
+  .ghost.attached { border-style: solid; border-color: #5a5f6a; }
+  .ghost.attached .g-body { opacity: 1; }
+  .ghost.attached .btn { display: none; }
+  .ghost .remove { display: none; flex: none; background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 20px; padding: 4px 6px; }
+  .ghost.attached .remove { display: block; }
+  .cover { width: 52px; height: 68px; border-radius: 6px; flex: none;
+    background: linear-gradient(160deg, #6a5bd6 0%, #2d6f8f 55%, #1d2b3a 100%); position: relative; overflow: hidden; }
+  .cover::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 10px; height: 14px;
+    border-radius: 50% 50% 0 0; background: rgba(255,255,255,.18); }
+  .g-text { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .g-title { font-weight: 500; font-size: 14px; }
+  .g-sub { font-size: 12px; color: var(--text-2); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chips span { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--text); }
+  .meters { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .meter { display: grid; grid-template-columns: 72px 1fr 44px; align-items: center; gap: 10px; font-size: 13px; }
+  .meter .bar { height: 8px; border-radius: 999px; background: var(--fill); overflow: hidden; }
+  .meter .bar i { display: block; height: 100%; border-radius: inherit; }
+  .meter .v { color: var(--text-2); display: flex; align-items: center; justify-content: flex-end; gap: 3px; font-variant-numeric: tabular-nums; }
+  .meter .v svg { width: 12px; height: 12px; color: var(--accent); }
+  .pips { display: flex; gap: 4px; }
+  .pips i { flex: 1; height: 8px; border-radius: 2px; background: var(--fill); }
+  .pips i.on { background: #c4bbff; }
+  .play { width: 40px; height: 40px; border-radius: 50%; background: var(--fill); display: grid; place-items: center; flex: none; }
+  .play svg { width: 16px; height: 16px; }
+  .wave { display: flex; align-items: center; justify-content: space-between; gap: 2px; height: 32px; width: 100%; overflow: hidden; }
+  .wave i { width: 3px; flex: none; border-radius: 2px; background: var(--text-3); opacity: .6; }
+
+  @media (max-width: 560px) {
+    .ghost { flex-direction: column; align-items: stretch; }
+    .ghost .btn { align-self: flex-start; }
+  }
+
+  hr { border: none; border-top: 3px solid var(--fill); margin: 0; }
+  .tokens .big { font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .tokens .small { font-size: 14px; color: var(--text-2); margin-top: 4px; }
+
+  .check { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+  .check input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); cursor: pointer; }
+  .actions { display: flex; justify-content: flex-end; gap: 10px; }
+  .actions .btn { height: 48px; padding: 0 20px; font-size: 16px; }
+  .btn.primary { background: var(--accent); border-color: transparent; color: #fff; }
+  .btn.primary:disabled { background: var(--accent-dim); color: #8f8aa8; cursor: not-allowed; }
+
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); opacity: 0;
+    background: #2a2c33; color: var(--text); padding: 10px 16px; border-radius: 8px; font-size: 14px;
+    transition: all .2s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 560px) {
+    body { padding: 0; }
+    .card { border-radius: 0; border-left: none; border-right: none; padding: 14px; }
+    .head h1 { font-size: 20px; }
+    .adv { --bleed: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/><path d="M20 3v4"/><path d="M22 5h-4"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+</svg>
+
+<div class="card">
+  <div class="head">
+    <h1>Create Chatbot</h1>
+    <a href="#" class="link js-docs">Creation Guide</a>
+  </div>
+
+  <form id="f" novalidate>
+    <!-- Avatar -->
+    <div class="field">
+      <div class="label">Avatar<span class="req">*</span><span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+      <div class="row">
+        <button type="button" class="btn filled js-noop"><svg><use href="#i-spark"/></svg>Generate</button>
+        <button type="button" class="btn js-noop"><svg><use href="#i-upload"/></svg>Upload</button>
+      </div>
+      <div class="help">Choose an avatar for your chatbot.</div>
+    </div>
+
+    <!-- Import -->
+    <div class="split">
+      <div class="field" style="gap:8px">
+        <div class="label">Import Character Card<span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+        <div class="help">Upload a character card (.json or .png) to fill in fields</div>
+      </div>
+      <button type="button" class="btn js-noop"><svg><use href="#i-download"/></svg>Import</button>
+    </div>
+
+    <!-- Name -->
+    <div class="field">
+      <div class="label-row"><div class="label">Name<span class="req">*</span><span class="info js-docs"><svg><use href="#i-info"/></svg></span></div></div>
+      <input class="input js-count js-req" data-max="30" maxlength="30" placeholder="Rhea Voss" value="Rhea Voss">
+      <div class="help"><span>The name can include first and last name</span><span class="count"></span></div>
+    </div>
+
+    <!-- Title -->
+    <div class="field">
+      <div class="label-row"><div class="label">Title<span class="req">*</span><span class="info js-docs"><svg><use href="#i-info"/></svg></span></div></div>
+      <textarea class="js-count js-req js-grow" data-max="80" maxlength="80" rows="1" placeholder="A retired starship pilot">A retired starship pilot who fixes what others scrap</textarea>
+      <div class="help"><span>Short sentence describing your chatbot</span><span class="count"></span></div>
+    </div>
+
+    <!-- Greeting -->
+    <div class="field">
+      <div class="label-row">
+        <div class="label">Greeting<span class="req">*</span><span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+        <button type="button" class="btn icon" disabled><svg><use href="#i-spark"/></svg></button>
+      </div>
+      <textarea class="js-count js-req js-grow js-tok" data-max="1500" data-tok maxlength="1500" rows="1" placeholder="Well, look who finally docked. Pull up a crate, {{user}}. The coffee's terrible, but the stories are free, and I've got more of those than I've got working engines.">Well, look who finally docked. Pull up a crate, {{user}}. The coffee's terrible, but the stories are free, and I've got more of those than I've got working engines.</textarea>
+      <div class="help"><span>What will they say to start a conversation.</span><span class="count"></span></div>
+    </div>
+
+    <!-- Personality -->
+    <div class="field">
+      <div class="label-row">
+        <div class="label">Chatbot's Personality<span class="req">*</span><span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+        <button type="button" class="btn icon" disabled><svg><use href="#i-spark"/></svg></button>
+      </div>
+      <textarea class="js-count js-req js-grow js-tok" data-max="4000" data-tok maxlength="4000" rows="4" placeholder="Rhea Voss flew cargo runs through the outer belt for twenty years before a crash grounded her for good. Dry, blunt and quietly kind, she runs a repair shop on a half-empty station and treats every visitor like a crew member who's late for their shift.">Rhea Voss flew cargo runs through the outer belt for twenty years before a crash grounded her for good. Dry, blunt and quietly kind, she runs a repair shop on a half-empty station and treats every visitor like a crew member who's late for their shift.</textarea>
+      <div class="help"><span>In a few sentences, describe your chatbot's personality.</span><span class="count"></span></div>
+    </div>
+
+    <!-- Visibility -->
+    <div class="field" style="gap:10px">
+      <div class="field" style="gap:8px">
+        <div class="label">Visibility</div>
+        <div class="row js-vis">
+          <button type="button" class="btn filled" data-v="public">Public</button>
+          <button type="button" class="btn on" data-v="private">Private</button>
+          <button type="button" class="btn filled" data-v="unlisted">Unlisted</button>
+        </div>
+        <div class="help js-vis-help">Only you can chat.</div>
+      </div>
+      <div class="split">
+        <div class="toggle-text js-pv-text dim">
+          <div class="t">Personality Visibility</div>
+          <div class="d">Let others see your chatbot's personality settings.</div>
+        </div>
+        <label class="switch js-pv-switch dim"><input type="checkbox" class="js-pv" disabled><span class="track"></span><span class="thumb"></span></label>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="field">
+      <div class="label">Tags<span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+      <div class="tags js-tags"><input placeholder="Add Tags" class="js-tag-input"></div>
+      <div class="help"><span>Choose tags to help people discover your bot</span><span class="count js-tag-count">0/10</span></div>
+    </div>
+
+    <!-- Advanced -->
+    <div class="adv js-adv">
+      <div class="adv-sticky">
+      <button type="button" class="adv-head js-adv-btn" aria-expanded="false">
+        <span>
+          <span class="t">Advanced</span>
+          <span class="d" style="display:block">Lorebook, rule set, voice, scenario and example dialogue</span>
+        </span>
+        <span class="right">
+          <span class="q-label">Detail: <b class="js-q-label">Good</b></span>
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </span>
+      </button>
+      <div class="q-track" aria-hidden="true"><div class="q-fill js-q-fill"></div></div>
+      </div>
+      <div class="adv-body">
+        <div class="addon">
+          <div class="label">Lorebook<span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+          <div class="ghost js-addon" data-tok="320" data-w="320">
+            <div class="g-body">
+              <div class="g-text">
+                <div class="g-title">The Outer Belt</div>
+                <div class="chips"><span>Kestrel Station</span><span>Captain Mara Holt</span><span>The Belt Wars</span><span>Drift Pirates</span><span>Hull credits</span></div>
+              </div>
+            </div>
+            <button type="button" class="btn js-attach"><svg><use href="#i-plus"/></svg>Attach</button>
+            <button type="button" class="remove js-remove" aria-label="Remove lorebook">×</button>
+          </div>
+          <div class="help">Gives your chatbot facts about its world: places, people and history it can bring up in chat.</div>
+        </div>
+        <div class="addon">
+          <div class="label">Rule Set<span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+          <div class="ghost js-addon" data-tok="180" data-w="180">
+            <div class="g-body">
+              <div class="meters">
+                <div class="meter"><span>Trust</span><span class="bar"><i style="width:62%;background:var(--accent)"></i></span><span class="v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>62</span></div>
+                <div class="meter"><span>Affection</span><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>4</span></div>
+              </div>
+            </div>
+            <button type="button" class="btn js-attach"><svg><use href="#i-plus"/></svg>Attach</button>
+            <button type="button" class="remove js-remove" aria-label="Remove rule set">×</button>
+          </div>
+          <div class="help">Adds meters that change as users chat and shape how your chatbot responds.</div>
+        </div>
+        <div class="addon">
+          <div class="label">Voice<span class="badge">Premium</span></div>
+          <div class="ghost js-addon" data-tok="0" data-w="60">
+            <div class="g-body">
+              <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></div>
+              <div class="wave js-wave"></div>
+            </div>
+            <button type="button" class="btn js-attach"><svg><use href="#i-plus"/></svg>Attach</button>
+            <button type="button" class="remove js-remove" aria-label="Remove voice">×</button>
+          </div>
+          <div class="help">Lets users hear your chatbot's replies out loud.</div>
+        </div>
+        <div class="field">
+          <div class="label-row">
+            <div class="label">Scenario<span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+            <button type="button" class="btn icon" disabled><svg><use href="#i-spark"/></svg></button>
+          </div>
+          <textarea class="js-count js-grow js-tok js-adv-tok" data-max="3000" data-tok maxlength="3000" rows="4" placeholder="The station's lights flicker as another power cut rolls through the docking ring. Rhea is elbow-deep in an engine panel when the airlock hisses open behind her, and she doesn't bother to turn around before telling you to grab a wrench."></textarea>
+          <div class="help"><span>Describe the current situation and context of the conversation.</span><span class="count"></span></div>
+        </div>
+        <div class="field">
+          <div class="label-row">
+            <div class="label">Example Dialogue<span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+            <button type="button" class="btn icon" disabled><svg><use href="#i-spark"/></svg></button>
+          </div>
+          <textarea class="js-count js-grow js-tok js-adv-tok" data-max="3000" data-tok maxlength="3000" rows="2" placeholder="{{user}}: Is this thing going to fly? {{char}}: Fly, sure. Land? That's a question for later."></textarea>
+          <div class="help"><span>Example conversations to define your chatbot. This will affect how it talks.</span><span class="count"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="toggle-text js-groups-text dim">
+        <div class="t">Allow in Groups</div>
+        <div class="d">Other users can add this chatbot to new groups. This won't affect groups it's already in.</div>
+      </div>
+      <label class="switch js-groups-switch dim"><input type="checkbox" class="js-groups" disabled><span class="track"></span><span class="thumb"></span></label>
+    </div>
+
+    <div class="tokens">
+      <div class="big">Tokens: <span class="js-tok-total">0</span>/3000<span class="info js-docs"><svg><use href="#i-info"/></svg></span></div>
+      <div class="small">Providing more details uses more tokens.</div>
+    </div>
+
+    <label class="check"><input type="checkbox" class="js-agree"> I have read and agree with the <a href="#" class="link js-docs" style="font-size:16px">Community Guidelines</a></label>
+
+    <div class="actions">
+      <button type="button" class="btn js-draft">Save Draft</button>
+      <button type="submit" class="btn primary js-done" disabled>Done</button>
+    </div>
+  </form>
+</div>
+
+<div class="toast js-toast"></div>
+
+<script>
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var toastEl = $('.js-toast'), toastT;
+  function toast(msg) {
+    toastEl.textContent = msg; toastEl.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
+  }
+  var BASIC_TARGET = null, ADV_TARGET = 900;
+  function tokens(s) { return Math.ceil(s.trim().length / 4); }
+
+  function grow(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+
+  function update() {
+    $$('.js-count').forEach(function (el) {
+      var c = el.parentNode.querySelector('.count');
+      var n = el.value.length, max = el.getAttribute('data-max');
+      c.textContent = el.hasAttribute('data-tok')
+        ? n + '/' + max + ' characters | ' + tokens(el.value) + ' tokens'
+        : n + '/' + max;
+    });
+    var total = $$('.js-tok').reduce(function (a, el) { return a + tokens(el.value); }, 0);
+    $$('.js-addon.attached').forEach(function (g) { total += +g.getAttribute('data-tok'); });
+    var basic = $$('.js-tok:not(.js-adv-tok)').reduce(function (a, el) { return a + tokens(el.value); }, 0);
+    var adv = $$('.js-adv-tok').reduce(function (a, el) { return a + tokens(el.value); }, 0);
+    $$('.js-addon.attached').forEach(function (g) { adv += +g.getAttribute('data-w'); });
+    if (BASIC_TARGET === null) BASIC_TARGET = Math.max(basic, 1);
+    var pct = Math.min(70, basic / BASIC_TARGET * 70) + Math.min(30, adv / ADV_TARGET * 30);
+    $('.js-q-fill').style.width = pct + '%';
+    var g = pct >= 100 ? 'Complete' : pct >= 85 ? 'Rich' : pct >= 70 ? 'Good' : pct >= 50 ? 'Basic' : 'Thin';
+    $('.js-q-label').textContent = g;
+    $('.js-tok-total').textContent = Math.round(pct / 100 * 3000);
+    var filled = $$('.js-req').every(function (el) { return el.value.trim().length > 0; });
+    $('.js-done').disabled = !(filled && $('.js-agree').checked);
+  }
+
+  $$('.js-count').forEach(function (el) { el.addEventListener('input', function () { if (el.classList.contains('js-grow')) grow(el); update(); }); });
+  $$('.js-grow').forEach(function (el) { setTimeout(function () { grow(el); }, 0); });
+  window.addEventListener('resize', function () { $$('.js-grow').forEach(grow); });
+  $('.js-agree').addEventListener('change', update);
+
+  // Visibility
+  var visHelp = { public: 'Anyone can find and chat.', private: 'Only you can chat.', unlisted: 'Anyone with the link can chat.' };
+  $$('.js-vis .btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('.js-vis .btn').forEach(function (x) { x.classList.remove('on'); x.classList.add('filled'); });
+      b.classList.add('on'); b.classList.remove('filled');
+      var v = b.getAttribute('data-v');
+      $('.js-vis-help').textContent = visHelp[v];
+      var enabled = v !== 'private';
+      [['.js-pv', '.js-pv-text', '.js-pv-switch'], ['.js-groups', '.js-groups-text', '.js-groups-switch']].forEach(function (g) {
+        $(g[0]).disabled = !enabled; if (!enabled) $(g[0]).checked = false;
+        $(g[1]).classList.toggle('dim', !enabled); $(g[2]).classList.toggle('dim', !enabled);
+      });
+    });
+  });
+
+  // Tags
+  var tags = ['Sci-fi', 'Mentor', 'Found family'], tagBox = $('.js-tags'), tagIn = $('.js-tag-input');
+  function renderTags() {
+    $$('.chip', tagBox).forEach(function (c) { c.remove(); });
+    tags.forEach(function (t, i) {
+      var c = document.createElement('span'); c.className = 'chip'; c.textContent = t;
+      var x = document.createElement('button'); x.type = 'button'; x.textContent = '×'; x.setAttribute('aria-label', 'Remove ' + t);
+      x.addEventListener('click', function () { tags.splice(i, 1); renderTags(); });
+      c.appendChild(x); tagBox.insertBefore(c, tagIn);
+    });
+    $('.js-tag-count').textContent = tags.length + '/10';
+  }
+  tagIn.addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ',') && tagIn.value.trim()) {
+      e.preventDefault();
+      if (tags.length < 10) { tags.push(tagIn.value.trim()); tagIn.value = ''; renderTags(); }
+    } else if (e.key === 'Backspace' && !tagIn.value && tags.length) { tags.pop(); renderTags(); }
+  });
+
+  renderTags();
+
+  // Advanced
+  $('.js-adv-btn').addEventListener('click', function () {
+    var adv = $('.js-adv'); adv.classList.toggle('open');
+    this.setAttribute('aria-expanded', adv.classList.contains('open'));
+    if (adv.classList.contains('open')) $$('.adv-body .js-grow').forEach(grow);
+  });
+
+  // Ghost previews: attach fills the preview, × returns it to the ghost
+  [10,18,26,14,22,30,16,24,12,20,28,18,10,24,16,26,12,20,14,8,12,22,28,16,10,20,26,30,18,12,24,16,22,10,28,14,20,26,12,18,8,16,24,30,20,14,22,10,26,18,12,28,16,20,24,10,18,14,22,8].forEach(function (h) {
+    var i = document.createElement('i'); i.style.height = h + 'px'; $('.js-wave').appendChild(i);
+  });
+  $$('.js-addon').forEach(function (g) {
+    $$('.js-attach', g).forEach(function (b) {
+      b.addEventListener('click', function () { g.classList.add('attached'); update(); });
+    });
+    g.addEventListener('click', function (e) { if (!g.classList.contains('attached') && !e.target.closest('.js-remove')) { g.classList.add('attached'); update(); } });
+    $('.js-remove', g).addEventListener('click', function (e) { e.stopPropagation(); g.classList.remove('attached'); update(); });
+  });
+
+  // Stubs
+  $$('.js-docs').forEach(function (el) { el.addEventListener('click', function (e) { e.preventDefault(); toast('Opens the help docs in a new tab'); }); });
+  $$('.js-noop').forEach(function (el) { el.addEventListener('click', function () { toast('Not part of this prototype'); }); });
+  $('.js-draft').addEventListener('click', function () { toast('Draft saved'); });
+  $('#f').addEventListener('submit', function (e) { e.preventDefault(); toast('Chatbot created'); });
+
+  update();
+
+  // Embedded as "#try": start scrolled so Tags and the Advanced band are in view
+  if (location.hash === '#try') {
+    window.addEventListener('load', function () {
+      var t = $('.js-tags').getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo(0, t);
+    });
+  }
+})();
+</script>
+</body>
+</html>

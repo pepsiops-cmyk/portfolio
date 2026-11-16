@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discover page — Nhan Le</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --line: #e4e1dc;
+    --accent: #2f5bea;
+    --card: #ffffff;
+    --read: 720px;
+    --wide: 1080px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 18px;
+  }
+  a { color: inherit; }
+  .read { max-width: var(--read); margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: var(--wide); margin: 0 auto; padding: 0 24px; }
+  h1 { font-size: clamp(34px, 4.5vw, 52px); line-height: 1.12; letter-spacing: -0.02em; }
+  h2 { font-size: 30px; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 16px; }
+  .eyebrow { font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+  p + p { margin-top: 16px; }
+  section { padding: 64px 0; }
+
+  nav { position: sticky; top: 0; background: rgba(250,249,247,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); z-index: 10; }
+  nav .wide { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+  nav a { text-decoration: none; font-size: 15px; }
+  nav .back { color: var(--muted); }
+
+  .header { padding: 80px 0 40px; }
+  .header .sub { font-size: 21px; color: var(--muted); margin-top: 18px; }
+
+  .meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 24px 0; margin-top: 40px; }
+  .meta .k { font-size: 13px; color: var(--muted); }
+  .meta .v { font-size: 16px; font-weight: 600; }
+
+  .caption { font-size: 14px; color: var(--muted); margin-top: 12px; margin-bottom: 32px; }
+  .sub-h { font-size: 20px; letter-spacing: -0.01em; margin: 36px 0 10px; }
+
+  .tldr { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .tldr .k { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+  .tldr p { font-size: 16px; }
+
+  .call { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; padding: 40px 0; border-top: 1px solid var(--line); }
+  .call:first-child { border-top: none; padding-top: 16px; }
+  .call h3 { font-size: 26px; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 14px; }
+  .call-text p { font-size: 17px; }
+  .call-notes { margin-top: 24px; display: grid; gap: 16px; }
+  .call-notes div { border-left: 2px solid var(--line); padding-left: 14px; }
+  .call-notes dt { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; color: var(--muted); }
+  .call-notes dd { font-size: 15px; line-height: 1.6; margin-top: 2px; }
+
+  .results { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 28px; }
+  .results .num { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; }
+  .results .label { font-size: 15px; color: var(--muted); }
+
+  .flow-title { font-size: 14px; font-weight: 700; margin: 8px 0 -4px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .flow { display: grid; gap: 14px; margin: 8px 0 36px; width: min(1032px, calc(100vw - 48px)); position: relative; left: 50%; transform: translateX(-50%); }
+  .flow-row { display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .flow-label { font-weight: 700; font-size: 15px; }
+  .flow-label span { display: block; font-weight: 400; font-size: 13px; color: var(--muted); }
+  .flow-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .pill { font-size: 14px; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; background: var(--bg); line-height: 1.3; }
+  .pill small { display: block; font-size: 12px; color: var(--muted); }
+  .pill.bad { border-color: #e2a3a3; background: #fdf1f1; }
+  .pill.good { border-color: #9fd3b4; background: #effaf3; }
+  .arr { color: var(--muted); font-size: 14px; }
+  .disclaimer { font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  .next { border-top: 1px solid var(--line); padding: 56px 0 80px; }
+  .next a { text-decoration: none; display: block; }
+  .next .t { font-size: 28px; font-weight: 700; letter-spacing: -0.015em; }
+  .next .t:hover { color: var(--accent); }
+
+  /* ---------- Recreated screen mockups ---------- */
+  .screen { background: #0e0f12; border-radius: 14px; padding: 22px; color: #e8e8ea; font-size: 13px; overflow: hidden; margin: 32px 0 0; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 12px 32px rgba(0,0,0,.08); }
+  .call .screen { margin: 0; }
+  .screen .bar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .screen .brand { font-weight: 700; font-size: 14px; }
+  .screen .search { width: 38%; height: 26px; border-radius: 99px; background: #1d1f25; }
+  .screen .sort { font-size: 12px; color: #9a9ba3; margin-bottom: 12px; }
+  .screen .sort b { color: #e8e8ea; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .bot { border-radius: 10px; background: #1a1c22; overflow: hidden; }
+  .bot .art { aspect-ratio: 3/4; }
+  .bot .t1 { height: 7px; width: 70%; background: #3a3d46; border-radius: 4px; margin: 8px 8px 5px; }
+  .bot .tag { display: inline-block; font-size: 10px; color: #c9cad1; background: #2a2d35; border-radius: 99px; padding: 1px 7px; margin: 0 8px 9px; }
+  .same .art { background: linear-gradient(160deg, #7a3b5c, #3b1f33); }
+  .rows { display: grid; gap: 16px; }
+  .row-h { display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+  .row-h span { font-weight: 400; color: #9a9ba3; font-size: 12px; }
+  .row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 9px; }
+  .row .bot .art { aspect-ratio: 4/5; }
+  .g-trend .art { background: linear-gradient(160deg, #7a3b5c, #3b1f33); }
+  .g-fant .art { background: linear-gradient(160deg, #3f6b4a, #1c3324); }
+  .g-hor .art { background: linear-gradient(160deg, #5a2a2a, #1e1010); }
+  .g-sci .art { background: linear-gradient(160deg, #2c4f7a, #14243a); }
+  .g-new .art { background: linear-gradient(160deg, #7a6a2c, #3a3014); }
+  .new-badge { font-size: 10px; font-weight: 700; color: #0e0f12; background: #e9cf6a; border-radius: 4px; padding: 0 5px; margin-left: 6px; }
+
+  .cards { display: flex; gap: 28px; justify-content: center; align-items: flex-end; background: #0e0f12; border-radius: 14px; padding: 28px 20px 22px; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 12px 32px rgba(0,0,0,.08); }
+  .cards .lbl { text-align: center; font-size: 12px; color: #9a9ba3; margin-top: 10px; text-transform: uppercase; letter-spacing: .1em; font-weight: 600; }
+  .c { width: 150px; background: #1a1c22; border: 1px solid #2c2f37; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+  .c .art { position: relative; background: linear-gradient(160deg, #3f6b4a, #1c3324); }
+  .c-old .art { aspect-ratio: 1/1; }
+  .c-new .art { aspect-ratio: 4/5; background: linear-gradient(160deg, #3f6b4a 0%, #1c3324 60%, #101a13 100%); }
+  .c-new .art .ov { position: absolute; left: 8px; right: 8px; bottom: 8px; }
+  .c .ln { height: 7px; border-radius: 4px; background: #3a3d46; }
+  .c .ln.name { height: 10px; width: 75%; background: #c9cad1; }
+  .c .ln.handle { width: 40%; margin-top: 5px; background: #5a5d66; }
+  .c-new .art .ln.name { background: #ffffff; }
+  .c-new .art .ln.handle { background: rgba(255,255,255,.55); }
+  .c .body { padding: 10px 8px; display: grid; gap: 6px; }
+  .c-old .body { gap: 8px; padding: 12px 8px; }
+  .c .tags { display: flex; gap: 4px; flex-wrap: wrap; }
+  .c .tags i { height: 9px; width: 30px; border-radius: 3px; background: #2a2d35; }
+  .c-new .ln { height: 5px; }
+  .c-new .tags i { height: 7px; width: 24px; }
+  .banner { position: relative; height: 92px; border-radius: 10px; background: linear-gradient(110deg, #3a2f5c, #1a1830 70%); margin-bottom: 18px; padding: 22px; }
+  .banner .ln { border-radius: 4px; background: rgba(255,255,255,.75); height: 10px; width: 30%; }
+  .banner .ln.b2 { margin-top: 8px; width: 20%; height: 7px; background: rgba(255,255,255,.4); }
+  .banner .dots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+  .banner .dots i { width: 6px; height: 6px; border-radius: 99px; background: rgba(255,255,255,.45); }
+  .banner .dots i.on { width: 16px; background: #fff; }
+  .scrolly .row { -webkit-mask-image: linear-gradient(to right, #000 85%, transparent); mask-image: linear-gradient(to right, #000 85%, transparent); }
+</style>
+<style>
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px; }
+  .split .screen { margin: 0; }
+  .split .label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+  .split .grid { grid-template-columns: repeat(4, 1fr); }
+  .split .row { grid-template-columns: repeat(4, 1fr); }
+
+  @media (max-width: 800px) {
+    .meta { grid-template-columns: 1fr 1fr; }
+    .tldr, .results, .split { grid-template-columns: 1fr; }
+    .flow-row { grid-template-columns: 1fr; }
+    .call { grid-template-columns: 1fr; gap: 24px; }
+    .grid { grid-template-columns: repeat(3, 1fr); }
+    .row { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wide">
+    <a href="index.html" class="back">← All work</a>
+    <a href="index.html"><b>Nhan Le</b></a>
+  </div>
+</nav>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <div class="read">
+    <div class="eyebrow">AI chat platform · Discover page</div>
+    <h1>Helped users find bots they'd like, even when they didn't know what they wanted</h1>
+    <p class="sub">New users were leaving the homepage without clicking anything. One long trending list made the whole site look like one kind of bot. I designed a page of rows by genre and topic, so people can sample before they commit. It shipped as a new Discover page.</p>
+
+    <div class="meta">
+      <div><div class="k">Role</div><div class="v">Sole Product Designer</div></div>
+      <div><div class="k">Team</div><div class="v">PM, CEO</div></div>
+      <div><div class="k">Brief</div><div class="v">From leadership</div></div>
+      <div><div class="k">Status</div><div class="v">Shipped</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wide">
+  <div class="screen" role="img" aria-label="Recreated Discover page: a feature banner on top, then rows titled Trending, Fantasy, Horror, Sci-fi and New this week, each with a strip of bot cards.">
+    <div class="bar-top"><div class="brand">Discover</div><div class="search"></div></div>
+    <div class="banner"><div class="ln b1"></div><div class="ln b2"></div><div class="dots"><i class="on"></i><i></i><i></i><i></i></div></div>
+    <div class="rows scrolly">
+      <div><div class="row-h">Trending now <span>See all</span></div>
+        <div class="row g-trend"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+      <div><div class="row-h">Fantasy <span>See all</span></div>
+        <div class="row g-fant"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+      <div><div class="row-h">Horror <span>See all</span></div>
+        <div class="row g-hor"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+      <div><div class="row-h">New this week<span class="new-badge" style="margin-left:6px">NEW</span> <span style="margin-left:auto">See all</span></div>
+        <div class="row g-new"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+    </div>
+  </div>
+  <p class="caption">Recreated wireframe. Genres and layout simplified for confidentiality.</p>
+</div>
+
+<!-- ================= TL;DR ================= -->
+<section>
+  <div class="wide">
+    <div class="tldr">
+      <div><div class="k">Problem</div><p>New users left the homepage without clicking anything. It was one list sorted by trending, so whatever was popular filled the screen and the site looked like it offered one kind of bot.</p></div>
+      <div><div class="k">My calls</div><p>Rows by genre and topic, so no single sort decides the whole first screen. A row for new bots, so they don't get buried. A new card where the art leads. Shipped as a separate page, after I'd recommended the homepage.</p></div>
+      <div><div class="k">Result</div><p>Shipped as a new Discover page. Beta testers liked it: rows let them figure out what they were into before diving in. Merging it into the homepage is still to come.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 1. CONTEXT ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">01 · Context</div>
+    <h2>New users were leaving at the front door</h2>
+    <p>The product is a consumer chat platform where users talk to AI chatbots that other users create. The homepage was the catalog: every bot on one page, sorted by what was trending.</p>
+    <p>Leadership noticed a lot of new users leaving straight from the homepage. They didn't click onboarding or anything else. The brief: redesign the homepage so new users stay.</p>
+  </div>
+</section>
+
+<!-- ================= 2. PROBLEM ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">02 · Problem</div>
+    <h2>One glance made the site look like one kind of bot</h2>
+    <p>New users leaving without a single click meant the first screen was the whole decision. So the question was: what does a new user see in that first glance, and what do they take from it?</p>
+
+    <h3 class="sub-h">1. Trending filled the whole screen</h3>
+    <p>Sorting by trending pushed whatever was popular that day to the top, and it took up the entire first screen. A new user saw a dozen bots of the same genre and assumed that was all the site had. On slow days the trending bots could just be dull.</p>
+  </div>
+  <div class="wide">
+    <div class="screen" role="img" aria-label="Recreated old homepage: one grid of bot cards sorted by trending, every card tagged with the same genre.">
+      <div class="bar-top"><div class="brand">Home</div><div class="search"></div></div>
+      <div class="sort">Sort: <b>Trending</b></div>
+      <div class="grid same">
+        <div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div><div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div><div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div><div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div><div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div>
+        <div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div><div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div><div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div><div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div><div class="bot"><div class="art"></div><div class="t1"></div><span class="tag">Romance</span></div>
+      </div>
+    </div>
+    <p class="caption">Recreated. Whatever trends that day owns the first screen, so the site reads as one genre.</p>
+  </div>
+  <div class="read">
+    <h3 class="sub-h">2. People didn't know what they wanted yet</h3>
+    <p>Beta testers put the deeper problem into words. Looking for a new bot was tiring because they didn't know what they wanted, so they just scanned. A single list only works if you already know what you're looking for. Everyone else has to scan everything, and if the first screen is all one kind of bot, there's nothing to grab onto.</p>
+  </div>
+</section>
+
+<!-- ================= 3. THE CALLS ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">03 · The calls</div>
+    <h2>Let people sample before they commit</h2>
+  </div>
+
+  <div class="wide">
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 1</div>
+        <h3>Rows by genre and topic, not one list</h3>
+        <p>Each row is its own small shelf: trending, then genres and topics. Trending gets one row instead of the whole page. A user who doesn't know what they want can glance down the row titles, notice what catches their eye, and dive into that row.</p>
+        <dl class="call-notes">
+          <div><dt>Why rows</dt><dd>Row titles do the sorting for the user. Instead of judging bots one by one, they first pick a kind of story, which is a much easier choice.</dd></div>
+          <div><dt>Tradeoff</dt><dd>Fewer bots per genre on the first screen than a full grid would show. Worth it because range is what a new user needs to see first, and each row opens up to show more.</dd></div>
+        </dl>
+      </div>
+      <div class="screen" role="img" aria-label="Recreated rows: Trending, Fantasy, Sci-fi, each a short strip of cards.">
+        <div class="rows">
+          <div><div class="row-h">Trending now <span>See all</span></div><div class="row g-trend"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+          <div><div class="row-h">Fantasy <span>See all</span></div><div class="row g-fant"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+          <div><div class="row-h">Sci-fi <span>See all</span></div><div class="row g-sci"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 2</div>
+        <h3>Give new bots a row of their own</h3>
+        <p>In one big list, a newly created bot lands at the bottom of the pile. A "New this week" row gives fresh bots a place to be seen, and gives users something different from the usual trending picks.</p>
+        <dl class="call-notes">
+          <div><dt>Tradeoff</dt><dd>New bots haven't proven themselves yet, so some will be weaker than trending ones. Worth it for the variety, and because it's one row, not the whole page.</dd></div>
+        </dl>
+      </div>
+      <div class="screen" role="img" aria-label="Recreated New this week row with NEW badges.">
+        <div class="rows">
+          <div><div class="row-h">New this week<span class="new-badge">NEW</span><span style="margin-left:auto">See all</span></div><div class="row g-new"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 3</div>
+        <h3>A card where the art leads</h3>
+        <p>The redesign came with a new bot card. The art got taller and takes up more of the card, and the bot's name moved onto the image. The card also got more compact, so more bots fit in each row.</p>
+        <dl class="call-notes">
+          <div><dt>Why</dt><dd>Someone browsing without a goal judges a bot by its picture first. A bigger image gives good art more room to catch their eye, and gives creators a reason to make art worth looking at.</dd></div>
+          <div><dt>Tradeoff</dt><dd>Smaller text for the description and tags. Worth it because the art and name do the first job, catching attention, and the details only matter once someone is interested.</dd></div>
+        </dl>
+      </div>
+      <div class="cards" role="img" aria-label="Recreated bot cards. Old: square image with name, description, tags and stats below. New: taller image with the name on the image, and a more compact text area below.">
+        <div>
+          <div class="c c-old">
+            <div class="art" data-seed="7"></div>
+            <div class="body">
+              <div class="ln name"></div><div class="ln handle"></div>
+              <div class="ln"></div><div class="ln" style="width:80%"></div>
+              <div class="tags"><i></i><i></i><i></i><i></i></div>
+              <div class="ln" style="width:55%;background:#2a2d35"></div>
+            </div>
+          </div>
+          <div class="lbl">Old card</div>
+        </div>
+        <div>
+          <div class="c c-new">
+            <div class="art" data-seed="7"><div class="ov"><div class="ln name"></div><div class="ln handle"></div></div></div>
+            <div class="body">
+              <div class="ln"></div><div class="ln"></div><div class="ln" style="width:60%"></div>
+              <div class="tags"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="ln" style="width:55%;background:#2a2d35"></div>
+            </div>
+          </div>
+          <div class="lbl">New card</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 4</div>
+        <h3>Ship it as its own page first</h3>
+        <p>I recommended putting the rows on the homepage itself, since that's where new users were leaving. Leadership chose to keep the homepage the same for everyone and launch the rows as a separate Discover page, then merge the two later, because users tend to dislike sudden change.</p>
+        <dl class="call-notes">
+          <div><dt>Tradeoff</dt><dd>Existing users weren't hit with a sudden change, and the rows got proven in the real product before replacing anything. The cost: new users still land on the old homepage until the merge.</dd></div>
+        </dl>
+      </div>
+      <div class="split" style="margin-top:0">
+        <div><div class="label">Homepage</div><div class="screen" role="img" aria-label="Homepage kept as a sortable list."><div class="sort">Sort: <b>Trending</b> · New · Top</div><div class="grid same"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div></div>
+        <div><div class="label">Discover</div><div class="screen" role="img" aria-label="Discover page with rows."><div class="rows"><div class="row g-fant"><div class="bot"><div class="art"></div></div><div class="bot"><div class="art"></div></div><div class="bot"><div class="art"></div></div><div class="bot"><div class="art"></div></div></div><div class="row g-sci"><div class="bot"><div class="art"></div></div><div class="bot"><div class="art"></div></div><div class="bot"><div class="art"></div></div><div class="bot"><div class="art"></div></div></div></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. OUTCOME ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">04 · Outcome</div>
+    <h2>Browsing became picking a direction, not scanning everything</h2>
+    <div class="flow-title">Finding a bot without knowing what you want</div>
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-label">Before<span>one list</span></div>
+        <div class="flow-steps">
+          <div class="pill">Land on the page</div><div class="arr">→</div>
+          <div class="pill">Scan bot by bot</div><div class="arr">→</div>
+          <div class="pill">See one genre</div><div class="arr">→</div>
+          <div class="pill bad">Leave<small>"not for me"</small></div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-label">After<span>rows</span></div>
+        <div class="flow-steps">
+          <div class="pill">Land on the page</div><div class="arr">→</div>
+          <div class="pill">Skim row titles</div><div class="arr">→</div>
+          <div class="pill">Spot a genre that looks fun</div><div class="arr">→</div>
+          <div class="pill good">Dive into that row<small>interest found</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results">
+      <div><div class="num">Shipped</div><div class="label">as a new Discover page in the live product</div></div>
+      <div><div class="num">Beta-tested</div><div class="label">testers liked the rows and said they made finding a bot easier</div></div>
+    </div>
+    <p style="margin-top:28px">Testers said rows let them figure out what they were into before diving deeper, instead of scanning a list with no idea what to look for.</p>
+    <p>The homepage stayed as it was, including the old card, and its sort options now work more like a search page for people who already know what they want. The merge into the homepage hasn't happened yet, so new users still land on the old homepage. That's why there's no data yet on whether it brings bounce down.</p>
+  </div>
+</section>
+
+<!-- ================= 5. REFLECTION ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">05 · What I'd do next</div>
+    <h2>Put the rows in front of new users and measure it</h2>
+    <p>The fastest way to test the original goal: send only new users to Discover first, keep the homepage the same for existing users, and compare how many new users click something before leaving. That would answer the bounce question without changing anything for existing users.</p>
+  </div>
+</section>
+
+<!-- ================= DISCLAIMER ================= -->
+<div class="read">
+  <p class="disclaimer">The company name, internal numbers and some feature names have been left out or changed to respect confidentiality. Visuals are simplified wireframes recreated for this portfolio; no original files were used.</p>
+</div>
+
+<!-- ================= NEXT ================= -->
+<div class="next">
+  <div class="read">
+    <div class="eyebrow">Next case study</div>
+    <a href="case-study.html"><div class="t">Made the chatbot form show creators what makes a good bot →</div></a>
+  </div>
+</div>
+
+<script src="art.js"></script>
+</body>
+</html>

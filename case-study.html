@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chatbot creation form — Nhan Le</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --line: #e4e1dc;
+    --accent: #2f5bea;
+    --card: #ffffff;
+    --read: 720px;
+    --wide: 1080px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 18px;
+  }
+  a { color: inherit; }
+  .read { max-width: var(--read); margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: var(--wide); margin: 0 auto; padding: 0 24px; }
+  h1 { font-size: clamp(34px, 4.5vw, 52px); line-height: 1.12; letter-spacing: -0.02em; }
+  h2 { font-size: 30px; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 16px; }
+  .eyebrow { font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+  p + p { margin-top: 16px; }
+  section { padding: 64px 0; }
+  ul.list { padding-left: 20px; }
+  ul.list li + li { margin-top: 8px; }
+
+  nav { position: sticky; top: 0; background: rgba(250,249,247,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); z-index: 10; }
+  nav .wide { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+  nav a { text-decoration: none; font-size: 15px; }
+  nav .back { color: var(--muted); }
+
+  .header { padding: 80px 0 40px; }
+  .header .sub { font-size: 21px; color: var(--muted); margin-top: 18px; }
+
+  .meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 24px 0; margin-top: 40px; }
+  .meta .k { font-size: 13px; color: var(--muted); }
+  .meta .v { font-size: 16px; font-weight: 600; }
+
+  .img { background: #ecebe8; border-radius: 14px; min-height: 420px; display: flex; align-items: center; justify-content: center; color: #9a9a9a; font-size: 14px; text-align: center; padding: 24px; margin: 32px 0; }
+  .img.small { min-height: 280px; }
+  .caption { font-size: 14px; color: var(--muted); margin-top: -20px; margin-bottom: 32px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .pair .img { margin: 0; }
+  .pair .label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+
+  .tldr { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .tldr .k { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+  .tldr p { font-size: 16px; }
+
+  blockquote { border-left: 3px solid var(--accent); padding: 4px 0 4px 20px; margin: 24px 0; font-size: 20px; line-height: 1.5; }
+  blockquote cite { display: block; font-size: 14px; color: var(--muted); font-style: normal; margin-top: 8px; }
+
+  .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+  .options.two { grid-template-columns: repeat(2, 1fr); }
+  .sub-h { font-size: 20px; letter-spacing: -0.01em; margin: 36px 0 10px; }
+  .flow-title { font-size: 14px; font-weight: 700; margin: 8px 0 -4px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .bar { height: 10px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 8px; width: 160px; }
+  .bar i { display: block; height: 100%; background: #2fb36b; }
+  .opt { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; font-size: 15px; }
+  .opt .img { min-height: 140px; margin: 0 0 14px; }
+  .opt h3 { font-size: 16px; margin-bottom: 6px; }
+  .opt.picked { border: 2px solid var(--accent); }
+  .opt .verdict { font-size: 13px; font-weight: 700; margin-top: 10px; }
+  .opt.picked .verdict { color: var(--accent); }
+
+  .callout { background: var(--text); color: var(--bg); border-radius: 16px; padding: 36px; }
+  .callout .eyebrow { color: #a9a9a9; }
+  .callout h2 { color: var(--bg); }
+
+  .call { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; padding: 40px 0; border-top: 1px solid var(--line); }
+  .call:first-child { border-top: none; padding-top: 16px; }
+  .call h3 { font-size: 26px; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 14px; }
+  .call-text p { font-size: 17px; }
+  .call-notes { margin-top: 24px; display: grid; gap: 16px; }
+  .call-notes div { border-left: 2px solid var(--line); padding-left: 14px; }
+  .call-notes dt { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; color: var(--muted); }
+  .call-notes dd { font-size: 15px; line-height: 1.6; margin-top: 2px; }
+  .call-img .shot { margin: 0; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 12px 32px rgba(0,0,0,.08); }
+
+  .results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 28px; }
+  .results .num { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; }
+  .results .label { font-size: 15px; color: var(--muted); }
+
+  .flow { display: grid; gap: 14px; margin: 8px 0 36px; width: min(1032px, calc(100vw - 48px)); position: relative; left: 50%; transform: translateX(-50%); }
+  .flow-row { display: grid; grid-template-columns: 90px 1fr; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .flow-label { font-weight: 700; font-size: 15px; }
+  .flow-label span { display: block; font-weight: 400; font-size: 13px; color: var(--muted); }
+  .flow-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .pill { font-size: 14px; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; background: var(--bg); line-height: 1.3; }
+  .pill small { display: block; font-size: 12px; color: var(--muted); }
+  .pill.bad { border-color: #e2a3a3; background: #fdf1f1; }
+  .pill.good { border-color: #9fd3b4; background: #effaf3; }
+  .arr { color: var(--muted); font-size: 14px; }
+  .disclaimer { font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  .shot { display: block; width: 100%; height: auto; border-radius: 14px; margin: 32px 0; background: #0e0f12; }
+  .pair .shot { margin: 0; }
+  .bars { display: grid; gap: 10px; margin: 32px 0; }
+  .bars .shot { margin: 0; }
+  .proto { margin: 32px 0 12px; }
+  .proto iframe { display: block; width: 100%; height: 780px; border: 0; border-radius: 14px; background: #0e0f12; }
+  .proto-hint { font-size: 15px; color: var(--muted); margin-bottom: 14px; }
+
+  .next { border-top: 1px solid var(--line); padding: 56px 0 80px; }
+  .next a { text-decoration: none; display: block; }
+  .next .t { font-size: 28px; font-weight: 700; letter-spacing: -0.015em; }
+  .next .t:hover { color: var(--accent); }
+
+
+  @media (max-width: 800px) {
+    .meta { grid-template-columns: 1fr 1fr; }
+    .tldr, .options, .options.two, .results, .pair { grid-template-columns: 1fr; }
+    .flow-row { grid-template-columns: 1fr; }
+    .call { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wide">
+    <a href="index.html" class="back">← All work</a>
+    <a href="index.html"><b>Nhan Le</b></a>
+  </div>
+</nav>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <div class="read">
+    <div class="eyebrow">AI chat platform · Chatbot creation form</div>
+    <h1>Made the chatbot form show creators what makes a good bot</h1>
+    <p class="sub">The form hid its most useful parts: add-ons behind blank "Attach" buttons, and key fields behind a button most people missed. I redesigned both, with ghost previews that explain each add-on and a quality bar that shows creators how complete their chatbot is.</p>
+
+    <div class="meta">
+      <div><div class="k">Role</div><div class="v">Sole Product Designer</div></div>
+      <div><div class="k">Team</div><div class="v">PM, CEO</div></div>
+      <div><div class="k">Timeline</div><div class="v">1-week sprint · 2026</div></div>
+      <div><div class="k">Platform</div><div class="v">Web + mobile</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wide">
+  <img class="shot" src="img/hero.png" alt="The redesigned form: the Advanced section open with a quality bar under its header, an attached lorebook, and faded previews of a rule set and a voice.">
+</div>
+
+<!-- ================= TL;DR ================= -->
+<section>
+  <div class="wide">
+    <div class="tldr">
+      <div><div class="k">Problem</div><p>The fields that make a chatbot good were hidden behind a button most creators missed, and the add-ons were blank "Attach" buttons nobody understood. Creators could publish with just the basics.</p></div>
+      <div><div class="k">My calls</div><p>Show, don't describe: ghost previews explain each add-on. Then give creators a reason to fill in more: a quality bar based on how much of the bot's text budget they've used.</p></div>
+      <div><div class="k">Result</div><p>Designed in a one-week sprint and tested with a large group of beta testers, with consistently positive reactions. Built to need no new backend. I left before it shipped.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 1. CONTEXT ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">01 · Context</div>
+    <h2>Better-filled bots get more chats</h2>
+    <p>The product is a consumer chat platform where users talk to AI chatbots that other users create. Every chatbot starts in the creation form, and every finished bot competes for attention in the public catalog.</p>
+    <p>Each chatbot has a fixed token budget, roughly the amount of text it can hold about itself. The basics, like the greeting message and personality, were always on screen. But the parts that make a bot genuinely good were extra:</p>
+    <ul class="list" style="margin-top:12px">
+      <li><b>Scenario</b> and <b>example dialogue</b>: more context on who the bot is and how it talks.</li>
+      <li><b>Add-ons</b>: <b>lorebooks</b> (background facts), <b>rule sets</b> (rules for how it behaves) and <b>voices</b> (how it sounds).</li>
+    </ul>
+    <p style="margin-top:16px">The more of that context a creator fills in, the better the bot performs in conversation, and the more engagement it gets in the catalog. A new add-on type was about to launch as a beta feature, adding one more thing to a form that was already getting long.</p>
+  </div>
+</section>
+
+<!-- ================= 2. PROBLEM ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">02 · Problem</div>
+    <h2>The form hid what makes a bot good</h2>
+    <p>The brief from my PM was open-ended: now that rule sets are coming, make the form a little easier to read. Nobody knew yet what that meant or what the actual problem was.</p>
+    <p>While designing the new rule set button, I noticed two things.</p>
+
+    <h3 class="sub-h">1. The good parts were easy to miss</h3>
+    <p>Scenario, example dialogue and all the add-ons sat behind a single outline button. It looked secondary and was easy to miss, so a creator could fill in the greeting and personality and publish without ever seeing the fields that would make their bot better.</p>
+    <img class="shot" src="img/before-collapsed.png" alt="The old form: greeting, personality, visibility and tags on screen, then a small outline button labelled Advanced.">
+    <p class="caption">"Advanced" looks like every other button on the page, and everything that makes a bot better sits behind it.</p>
+
+    <h3 class="sub-h">2. Even when found, add-ons didn't explain themselves</h3>
+    <p>The new rule set button would look exactly like the lorebook and voice buttons next to it: a blank button that said "Attach." The only explanation was on a separate documentation page. So a new creator's path was: see the button, wonder what it is, click it, pick something, see "attached," and still not know what it does.</p>
+    <img class="shot" src="img/before-addons.png" alt="The old add-on section: Attach Lorebook, Attach Rule Set, and Create or Attach voice buttons, each with a one-line hint.">
+    <p class="caption">Three add-ons, the same blank buttons, and no hint of what any of them does.</p>
+  </div>
+</section>
+
+<!-- ================= 3. THE CALLS ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">03 · The calls</div>
+    <h2>Two decisions, one goal: get creators to fill in more</h2>
+  </div>
+
+  <div class="wide">
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 1</div>
+        <h3>Show the add-on, don't describe it</h3>
+        <p>I replaced each "Attach" button with a ghost preview: a faded example of the add-on, shown where it would sit once attached. People recognize a picture of the result faster than they read a description of it.</p>
+        <dl class="call-notes">
+          <div><dt>Rejected</dt><dd>A "What's this?" link or tooltip pointing to the docs. It still makes creators stop and read, and it doesn't show the result.</dd></div>
+          <div><dt>Tradeoff</dt><dd>Previews take up more space in a form that was already long. Worth it because they replace reading with recognizing, and testers said the form got easier to scan, not harder.</dd></div>
+        </dl>
+      </div>
+      <div class="call-img"><img class="shot" src="img/after-ghosts.png" alt="Ghost previews for a lorebook, a rule set and a voice."></div>
+    </div>
+
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 2</div>
+        <h3>Give creators a reason to open the Advanced section</h3>
+        <p>I turned the faint outline button into a clearly labelled Advanced section, with a quality bar that fills up as the creator uses more of the token budget. Scenario, example dialogue and attached add-ons all count toward it.</p>
+        <dl class="call-notes">
+          <div><dt>Why tokens</dt><dd>There was no AI or backend to review what creators wrote. Token count was the one signal available right in the form, so the bar needed no new backend work.</dd></div>
+          <div><dt>Tradeoff</dt><dd>Token count measures how much a creator wrote, not how good it is. Worth it because within a fixed token limit, more context almost always makes a better bot, and a simple signal now beats a perfect one that needs a review system first.</dd></div>
+        </dl>
+      </div>
+      <div class="call-img"><img class="shot" src="img/after-card.png" alt="The Advanced section collapsed into a labelled card with the quality bar along its bottom edge."></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. FINAL DESIGN ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">04 · Final design</div>
+    <h2>Creators can see what a good bot needs</h2>
+  </div>
+  <div class="wide">
+    <div class="pair">
+      <div><div class="label">Before</div><img class="shot" src="img/before-pair.png" alt="Old form with the Advanced section open: plain Attach buttons."></div>
+      <div><div class="label">After</div><img class="shot" src="img/after-pair.png" alt="New form with the Advanced section open: ghost previews and the quality bar."></div>
+    </div>
+    <img class="shot" src="img/after-ghosts.png" alt="Ghost previews: a lorebook with its entry keywords, a rule set with trust and affection meters, and a voice with a waveform.">
+    <p class="caption">Each preview answers "what is this?" before the click, not after. The lorebook shows the kind of entries it holds; the rule set shows the meters it adds.</p>
+    <div class="bars">
+      <img class="shot" src="img/bar-thin.png" alt="Quality bar under half full, labelled Thin.">
+      <img class="shot" src="img/bar-good.png" alt="Quality bar at 70%, labelled Good.">
+      <img class="shot" src="img/bar-rich.png" alt="Quality bar near 90%, labelled Rich.">
+      <img class="shot" src="img/bar-complete.png" alt="Quality bar full, labelled Complete.">
+    </div>
+    <p class="caption">The bar answers "is my bot good enough?" The basics get a creator to Good; only the Advanced section gets them to Rich and Complete.</p>
+
+    <div class="proto">
+      <div class="label" style="font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:8px">Try it</div>
+      <p class="proto-hint">Open the Advanced section, attach an add-on or write a scenario, and watch the bar fill.</p>
+      <iframe src="form-after.html#try" title="Interactive prototype of the redesigned chatbot form" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. OUTCOME ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">05 · Outcome</div>
+    <h2>Creators understood the form before they had to figure it out</h2>
+  </div>
+  <div class="read">
+    <div class="flow-title">Understanding an add-on</div>
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-label">Before<span>5 steps</span></div>
+        <div class="flow-steps">
+          <div class="pill">See "Attach"</div><div class="arr">→</div>
+          <div class="pill">Wonder what it is</div><div class="arr">→</div>
+          <div class="pill">Click</div><div class="arr">→</div>
+          <div class="pill">Pick one</div><div class="arr">→</div>
+          <div class="pill bad">See "Attached"<small>still unsure</small></div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-label">After<span>1 step</span></div>
+        <div class="flow-steps">
+          <div class="pill good">See the preview<small>understood</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-title">Knowing if your bot is good</div>
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-label">Before</div>
+        <div class="flow-steps">
+          <div class="pill">Fill in greeting + personality</div><div class="arr">→</div>
+          <div class="pill bad">Publish<small>extra fields never seen</small></div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-label">After</div>
+        <div class="flow-steps">
+          <div class="pill">Fill in basics</div><div class="arr">→</div>
+          <div class="pill">See the bar is low</div><div class="arr">→</div>
+          <div class="pill">Open Advanced</div><div class="arr">→</div>
+          <div class="pill good">Publish a fuller bot<small>bar filled</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results">
+      <div><div class="num">Beta-tested</div><div class="label">with a large group of beta users, with consistently positive reactions</div></div>
+      <div><div class="num">1 week</div><div class="label">from a vague brief to a tested design</div></div>
+      <div><div class="num">0</div><div class="label">new backend needed: the quality bar runs on token count in the form</div></div>
+    </div>
+    <p style="margin-top:28px">Testers said the form was easier to scan, they were less likely to miss the add-ons, and they understood what each one did before attaching it.</p>
+    <p>I left the company before the redesign shipped, so there's no launch data. The testing is the evidence that it worked.</p>
+  </div>
+</section>
+
+<!-- ================= 6. REFLECTION ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">06 · What I'd do next</div>
+    <h2>Check that fuller bots really get more chats</h2>
+    <p>Next I'd compare catalog engagement for bots with a full quality bar against bots with a low one, to confirm that more context really leads to more chats. If it does, the bar could weigh fields differently. Example dialogue likely matters more per token than a long backstory.</p>
+    <p>In hindsight, I'd have tested the old form with new creators first, so I'd have their confusion on record to compare against.</p>
+  </div>
+</section>
+
+<!-- ================= DISCLAIMER ================= -->
+<div class="read">
+  <p class="disclaimer">The company name, internal numbers and some feature names have been left out or changed to respect confidentiality. Visuals are recreated for this portfolio; no original files were used.</p>
+</div>
+
+<!-- ================= NEXT ================= -->
+<div class="next">
+  <div class="read">
+    <div class="eyebrow">Next case study</div>
+    <a href="discover.html"><div class="t">Helped users find bots they'd like, even when they didn't know what they wanted →</div></a>
+  </div>
+</div>
+
+</body>
+</html>

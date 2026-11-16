@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nhan Le — Product Designer</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --line: #e4e1dc;
+    --accent: #2f5bea;
+    --card: #ffffff;
+    --max: 1080px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 64px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 17px;
+  }
+  a { color: inherit; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  section { padding: 72px 0; border-bottom: 1px solid var(--line); }
+  h1 { font-size: clamp(36px, 5vw, 56px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 700; max-width: 860px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; margin-bottom: 28px; }
+  h3 { font-size: 22px; line-height: 1.3; letter-spacing: -0.01em; }
+  p { max-width: 640px; }
+
+  nav { position: sticky; top: 0; background: rgba(250,249,247,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); z-index: 10; }
+  nav .wrap { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+  nav .logo { font-weight: 700; text-decoration: none; }
+  nav ul { display: flex; gap: 28px; list-style: none; font-size: 15px; }
+  nav a { text-decoration: none; color: var(--muted); }
+  nav a:hover { color: var(--text); }
+
+  .hero { padding: 96px 0 72px; }
+  .hero .sub { font-size: 20px; color: var(--muted); margin-top: 20px; }
+  .hero .status { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; font-size: 14px; color: var(--muted); }
+  .hero .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2fb36b; }
+
+  .proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .proof .num { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
+  .proof .label { color: var(--muted); font-size: 15px; }
+
+  .work { display: grid; gap: 40px; }
+  .offer { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 40px; row-gap: 0; }
+  .offer > div { display: grid; grid-template-rows: subgrid; grid-row: span 3; border-top: 2px solid var(--text); padding-top: 20px; }
+  .offer h3 { font-size: 20px; line-height: 1.3; margin-bottom: 12px; }
+  .offer .label { color: var(--muted); font-size: 15px; line-height: 1.6; }
+  .offer .proofline { align-self: start; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--text); font-size: 14px; }
+  .card { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; text-decoration: none; transition: transform .15s ease, box-shadow .15s ease; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+  .card .thumb { background: #ecebe8; min-height: 300px; display: flex; align-items: center; justify-content: center; color: #9a9a9a; font-size: 14px; text-align: center; padding: 20px; }
+  .card .thumb.has-img { padding: 0; background: #0e0f12; position: relative; overflow: hidden; }
+  .card .thumb.has-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; transition: transform .3s ease; }
+  .card:hover .thumb.has-img img { transform: scale(1.02); }
+  .card .body { padding: 32px 32px 32px 0; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  .card .company { font-size: 14px; color: var(--muted); }
+  .card .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .card .tags span { font-size: 13px; border: 1px solid var(--line); border-radius: 99px; padding: 3px 10px; color: var(--muted); }
+  .card .cta { color: var(--accent); font-weight: 600; font-size: 15px; }
+
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .step { border-top: 2px solid var(--text); padding-top: 14px; }
+  .step .n { font-size: 13px; color: var(--muted); }
+  .step h3 { font-size: 18px; margin: 4px 0 8px; }
+  .step p { font-size: 15px; color: var(--muted); }
+
+  .about { display: grid; grid-template-columns: 280px 1fr; gap: 48px; align-items: start; }
+  .photo { aspect-ratio: 4/5; background: #ecebe8; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #9a9a9a; font-size: 14px; }
+  .about p + p { margin-top: 16px; }
+
+  .contact { border-bottom: none; }
+  .contact h3 { font-size: 36px; letter-spacing: -0.02em; }
+  .contact p { color: var(--muted); margin-top: 12px; }
+  .links { display: flex; gap: 16px; margin-top: 28px; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 12px 22px; border-radius: 99px; border: 1px solid var(--text); text-decoration: none; font-weight: 600; font-size: 15px; }
+  .btn.primary { background: var(--text); color: var(--bg); }
+  footer { padding: 32px 0; color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 800px) {
+    nav ul { gap: 16px; }
+    .proof, .steps { grid-template-columns: 1fr; }
+    .offer { grid-template-columns: 1fr; row-gap: 40px; }
+    .offer > div { grid-template-rows: auto; grid-row: auto; }
+    .card, .about { grid-template-columns: 1fr; }
+    .card .body { padding: 0 24px 28px; }
+    .card .thumb { min-height: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo">Nhan Le</a>
+    <ul>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap">
+    <h1>I find the UX problems costing you users, and fix them.</h1>
+    <p class="sub">Product designer for consumer apps. Most recently the sole designer on an AI chat platform, owning UX across the whole product.</p>
+    <div class="links">
+      <a class="btn primary" href="#work">See the work</a>
+      <a class="btn" href="mailto:nhanle.ux@gmail.com">Email me</a>
+    </div>
+    <div class="status">Available now · Product Designer roles · Remote or hybrid in the Greater Toronto Area</div>
+  </div>
+</header>
+
+<!-- ================= WHAT YOU GET ================= -->
+<section>
+  <div class="wrap">
+    <h2>What you get</h2>
+    <div class="offer">
+      <div>
+        <h3>Your roadmap, plus the problems nobody flagged</h3>
+        <p class="label">You get the features you've planned, plus a tested fix wherever users are getting stuck, even where nobody has reported it yet.</p>
+        <p class="label proofline"><b>Proof:</b> redesigned a chatbot creation form and tested it with a large beta group.</p>
+      </div>
+      <div>
+        <h3>Tested before it's built</h3>
+        <p class="label">Ideas get prototyped and checked with real users before any engineering time goes into them.</p>
+        <p class="label proofline"><b>Proof:</b> AI-assisted prototyping and testing, shown in each case study.</p>
+      </div>
+      <div>
+        <h3>Less for you to manage</h3>
+        <p class="label">Hand over a brief, or just point to an area. Either way, you get the problem understood and a design ready to build, without hand-holding.</p>
+        <p class="label proofline"><b>Proof:</b> sole designer across the whole product: homepage, catalog, character profiles, groups and lorebooks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SELECTED WORK ================= -->
+<section id="work">
+  <div class="wrap">
+    <h2>Selected work</h2>
+
+    <div class="work">
+      <a href="case-study.html" class="card">
+        <div class="thumb has-img"><img src="img/hero.png" alt="The redesigned chatbot form: Advanced section with a quality bar and ghost previews of add-ons."></div>
+        <div class="body">
+          <div class="company">AI chat platform · Chatbot creation form</div>
+          <h3>Made the chatbot form show creators what makes a good bot</h3>
+          <p>Key fields were hidden and add-ons didn't explain themselves, so creators could publish with just the basics. Ghost previews and a quality bar showed them what to add, and why.</p>
+          <div class="tags"><span>Creator Tools</span><span>Complex Forms</span><span>Progressive Disclosure</span><span>Beta Testing</span></div>
+          <span class="cta">Read case study →</span>
+        </div>
+      </a>
+
+      <a href="discover.html" class="card">
+        <div class="thumb has-img" style="display:block;padding:22px" role="img" aria-label="Recreated Discover page: rows of bot cards grouped by genre.">
+          <div style="display:grid;gap:14px">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"><i class="art-ph" data-genre="trend" style="display:block;aspect-ratio:4/5;border-radius:8px"></i><i class="art-ph" data-genre="trend" style="display:block;aspect-ratio:4/5;border-radius:8px"></i><i class="art-ph" data-genre="trend" style="display:block;aspect-ratio:4/5;border-radius:8px"></i><i class="art-ph" data-genre="trend" style="display:block;aspect-ratio:4/5;border-radius:8px"></i></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"><i class="art-ph" data-genre="fant" style="display:block;aspect-ratio:4/5;border-radius:8px"></i><i class="art-ph" data-genre="fant" style="display:block;aspect-ratio:4/5;border-radius:8px"></i><i class="art-ph" data-genre="fant" style="display:block;aspect-ratio:4/5;border-radius:8px"></i><i class="art-ph" data-genre="fant" style="display:block;aspect-ratio:4/5;border-radius:8px"></i></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"><i class="art-ph" data-genre="sci" style="display:block;aspect-ratio:4/5;border-radius:8px"></i><i class="art-ph" data-genre="sci" style="display:block;aspect-ratio:4/5;border-radius:8px"></i><i class="art-ph" data-genre="sci" style="display:block;aspect-ratio:4/5;border-radius:8px"></i><i class="art-ph" data-genre="sci" style="display:block;aspect-ratio:4/5;border-radius:8px"></i></div>
+          </div>
+        </div>
+        <div class="body">
+          <div class="company">AI chat platform · Discover page</div>
+          <h3>Helped users find bots they'd like, even when they didn't know what they wanted</h3>
+          <p>New users left the homepage without clicking anything: one trending list made the site look like one kind of bot. Rows by genre and topic let people sample before they commit.</p>
+          <div class="tags"><span>Content Discovery</span><span>Information Architecture</span><span>New-user Activation</span><span>Shipped</span></div>
+          <span class="cta">Read case study →</span>
+        </div>
+      </a>
+
+      <!-- OPTIONAL THIRD CARD — only add if it's as strong as the first two
+      <a href="case-study.html" class="card">
+        <div class="thumb">Hero image</div>
+        <div class="body">
+          <div class="company">Company · Feature</div>
+          <h3>Outcome-led title</h3>
+          <p>Problem → what you did → result.</p>
+          <div class="tags"><span>Role</span><span>Platform</span><span>Scope</span></div>
+          <span class="cta">Read case study →</span>
+        </div>
+      </a>
+      -->
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW I WORK ================= -->
+<section>
+  <div class="wrap">
+    <h2>How I work</h2>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>Frame</h3><p>What is the user trying to do, and what are they assuming?</p></div>
+      <div class="step"><div class="n">02</div><h3>Map</h3><p>Lay out the current flow to see exactly where it breaks.</p></div>
+      <div class="step"><div class="n">03</div><h3>Target</h3><p>Pick the one break worth fixing first.</p></div>
+      <div class="step"><div class="n">04</div><h3>Rough</h3><p>Prototype fast, test with users, drop what doesn't work.</p></div>
+      <div class="step"><div class="n">05</div><h3>Finalize</h3><p>Polish the design and hand it off clearly.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="wrap about">
+    <div class="photo">TODO: photo of you</div>
+    <div>
+      <h2>About</h2>
+      <p>Whether it's a feature on the roadmap or friction nobody has flagged yet, the starting point is the same: what the user is actually trying to do. Their intent, the assumptions they bring, the moments they hesitate. The design comes from removing the friction and pain points in their way.</p>
+      <p>Most recently I was the sole designer on a consumer AI chat platform, owning UX end to end alongside a PM and the CEO. Before that: three years at an influencer marketing startup, designing tools for creators and brands across web and mobile, including the design system in Figma.</p>
+      <p>AI is part of the workflow: it means more ideas get prototyped and tested with real users before engineering builds anything.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <h3>Hiring a product designer? Let's talk.</h3>
+    <p>Available now. Want to see how I'd approach your product first? I'm happy to do a design challenge of up to a day.</p>
+    <div class="links">
+      <a class="btn primary" href="mailto:nhanle.ux@gmail.com">nhanle.ux@gmail.com</a>
+      <a class="btn" href="TODO-linkedin-url">LinkedIn</a>
+      <a class="btn" href="TODO-resume.pdf">Download resume</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Nhan Le · Oakville, Ontario</div>
+</footer>
+
+<script src="art.js"></script>
+</body>
+</html>
