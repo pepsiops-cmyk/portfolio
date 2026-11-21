@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifting log — Nhan Le</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f7;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --line: #e4e1dc;
+    --accent: #2f5bea;
+    --card: #ffffff;
+    --read: 720px;
+    --wide: 1080px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 18px;
+  }
+  a { color: inherit; }
+  .read { max-width: var(--read); margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: var(--wide); margin: 0 auto; padding: 0 24px; }
+  h1 { font-size: clamp(34px, 4.5vw, 52px); line-height: 1.12; letter-spacing: -0.02em; }
+  h2 { font-size: 30px; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 16px; }
+  .eyebrow { font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+  p + p { margin-top: 16px; }
+  section { padding: 64px 0; }
+
+  nav { position: sticky; top: 0; background: rgba(250,249,247,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); z-index: 10; }
+  nav .wide { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+  nav a { text-decoration: none; font-size: 15px; }
+  nav .back { color: var(--muted); }
+
+  .header { padding: 80px 0 40px; }
+  .header .sub { font-size: 21px; color: var(--muted); margin-top: 18px; }
+
+  .meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 24px 0; margin-top: 40px; }
+  .meta .k { font-size: 13px; color: var(--muted); }
+  .meta .v { font-size: 16px; font-weight: 600; }
+
+  .caption { font-size: 14px; color: var(--muted); margin-top: 12px; margin-bottom: 32px; }
+  .sub-h { font-size: 20px; letter-spacing: -0.01em; margin: 36px 0 10px; }
+
+  .tldr { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .tldr .k { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+  .tldr p { font-size: 16px; }
+
+  /* Tap counts */
+  .taps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 28px; }
+  .tap { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 22px 20px; }
+  .tap .num { font-size: 44px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  .tap .num span { font-size: 18px; font-weight: 600; color: var(--muted); letter-spacing: 0; margin-left: 6px; }
+  .tap .what { font-size: 16px; font-weight: 600; margin-top: 10px; line-height: 1.4; }
+  .tap .how { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+  .call { display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: center; padding: 48px 0; border-top: 1px solid var(--line); }
+  .call:first-child { border-top: none; padding-top: 16px; }
+  .call h3 { font-size: 26px; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 14px; }
+  .call-text p { font-size: 17px; }
+  .call-notes { margin-top: 24px; display: grid; gap: 16px; }
+  .call-notes div { border-left: 2px solid var(--line); padding-left: 14px; }
+  .call-notes dt { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; color: var(--muted); }
+  .call-notes dd { font-size: 15px; line-height: 1.6; margin-top: 2px; }
+
+  .flow-title { font-size: 14px; font-weight: 700; margin: 8px 0 -4px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .flow { display: grid; gap: 14px; margin: 20px 0 12px; }
+  .flow-row { display: grid; grid-template-columns: 130px 1fr; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .flow-label { font-weight: 700; font-size: 15px; line-height: 1.35; }
+  .flow-label span { display: block; font-weight: 400; font-size: 13px; color: var(--muted); }
+  .flow-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .pill { font-size: 14px; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; background: var(--bg); line-height: 1.3; }
+  .pill.bad { border-color: #e2a3a3; background: #fdf1f1; }
+  .pill.good { border-color: #9fd3b4; background: #effaf3; }
+  .arr { color: var(--muted); font-size: 14px; }
+
+  .list { margin-top: 12px; padding-left: 22px; }
+  .list li + li { margin-top: 8px; }
+  .disclaimer { font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  .next { border-top: 1px solid var(--line); padding: 56px 0 80px; }
+  .next a { text-decoration: none; display: block; }
+  .next .t { font-size: 28px; font-weight: 700; letter-spacing: -0.015em; }
+  .next .t:hover { color: var(--accent); }
+
+  /* ---------- Phone mockups (recreated from the prototype) ---------- */
+  .trio { display: flex; justify-content: center; gap: 36px; flex-wrap: wrap; background: #0d0f0e; border-radius: 20px; padding: 36px 24px 28px; }
+  .trio figure { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .trio figcaption { color: #c9ccc8; font-size: 14px; text-align: center; max-width: 260px; line-height: 1.45; }
+  .trio figcaption b { color: #fff; display: block; font-size: 15px; }
+  .frame { width: 281px; height: 608px; border-radius: 30px; overflow: hidden; position: relative; box-shadow: 0 0 0 6px #262a2b, 0 18px 40px rgba(0,0,0,.35); flex: none; }
+  .frame.short { height: 400px; }
+  .call .frame { box-shadow: 0 0 0 6px #262a2b, 0 14px 32px rgba(0,0,0,.18); }
+  .ph { width: 390px; height: 844px; transform: scale(.7205); transform-origin: 0 0; background: #131514; color: #F2F3F0; font-family: Inter, system-ui, sans-serif; font-size: 15px; line-height: 1.35; position: absolute; top: 0; left: 0; box-sizing: border-box; }
+  .ph .gk { font-family: 'Space Grotesk', Inter, sans-serif; }
+  .ph .mut { color: #9BA1A6; }
+  .ph .lime { color: #C8F03C; }
+  .ph .org { color: #FFA15C; }
+  .ph .tab { font-variant-numeric: tabular-nums; }
+  .ph .lbl { font-size: 12px; font-weight: 600; letter-spacing: 1.2px; color: #9BA1A6; }
+  .ph .circle { width: 44px; height: 44px; border-radius: 22px; background: #1D2122; display: flex; align-items: center; justify-content: center; }
+  .ph .cta { height: 56px; border-radius: 16px; background: #C8F03C; color: #0F1113; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 17px; font-weight: 700; }
+  .ph .tile { height: 56px; border-radius: 14px; background: #1D2122; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; font-size: 16px; font-weight: 500; }
+  .ph .li { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2A2E33; }
+  .ph .li:last-child { border-bottom: 0; }
+  /* log screen */
+  .ph .exh { display: flex; align-items: center; gap: 10px; min-height: 48px; }
+  .ph .ico { width: 36px; height: 36px; border-radius: 10px; background: rgba(200,240,60,0.12); display: flex; align-items: center; justify-content: center; flex: none; }
+  .ph .exn { font-size: 18px; font-weight: 600; line-height: 1.25; }
+  .ph .exs { font-size: 12px; color: #9BA1A6; }
+  .ph .gain { color: #C8F03C; font-weight: 700; margin-left: 8px; }
+  .ph .card { border-bottom: 1px solid #2A2E33; padding: 12px 0 10px; }
+  .ph .grid5 { display: grid; grid-template-columns: 32px 1fr 1fr 1fr 44px; column-gap: 6px; align-items: center; }
+  .ph .colh { font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #9BA1A6; padding: 6px 0 2px; }
+  .ph .srow { height: 48px; font-variant-numeric: tabular-nums; }
+  .ph .srow .v { text-align: center; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 17px; font-weight: 700; }
+  .ph .srow .l { font-family: 'Space Grotesk', Inter, sans-serif; font-size: 17px; font-weight: 500; color: #9BA1A6; }
+  .ph .sel { background: #1D2122; margin: 0 -16px; padding: 0 16px; }
+  .ph .chk { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .ph .chk.on { background: #C8F03C; color: #0F1113; }
+  .ph .chk.off { background: rgba(242,243,240,0.07); color: #F2F3F0; }
+  .ph .stp { display: flex; justify-content: center; gap: 4px; }
+  .ph .stp i { width: 40px; height: 40px; border-radius: 10px; border: 1px solid #3A3F45; color: #C3C7CA; font-size: 22px; font-style: normal; display: flex; align-items: center; justify-content: center; }
+  /* keypad */
+  .ph .key { height: 52px; border-radius: 12px; background: #272C2D; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 22px; font-weight: 600; }
+  .ph .qs { height: 44px; border-radius: 12px; background: #2D3233; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; }
+  .ph .chip { height: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid #3A3F45; display: flex; align-items: center; font-size: 15px; font-weight: 500; }
+  .ph .plate { margin: 0 1px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #0F1113; }
+  /* review */
+  .ph .stat { background: #1D2122; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .ph .stat b { font-family: 'Space Grotesk', Inter, sans-serif; font-size: 22px; }
+  .ph .stat span { font-size: 12px; color: #9BA1A6; }
+  .ph .rv { background: #1D2122; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .ph .rv .top { display: flex; justify-content: space-between; align-items: center; }
+  .ph .rv .top span:first-child { font-size: 15px; font-weight: 600; }
+  .ph .rv .top span:last-child { font-size: 13px; font-weight: 600; }
+  .ph .sets { display: flex; gap: 6px; }
+  .ph .sets i { height: 32px; padding: 0 10px; border-radius: 8px; background: #2D3233; font-size: 13px; font-style: normal; display: flex; align-items: center; font-variant-numeric: tabular-nums; }
+  .ph .sets i.dn { box-shadow: inset 0 0 0 1px #FFA15C; }
+
+  @media (max-width: 800px) {
+    .meta { grid-template-columns: 1fr 1fr; }
+    .tldr, .taps { grid-template-columns: 1fr; }
+    .flow-row { grid-template-columns: 1fr; }
+    .call { grid-template-columns: 1fr; gap: 28px; justify-items: center; }
+    .call-text { justify-self: stretch; }
+    .trio { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scroll-snap-type: x mandatory; padding: 28px 20px 22px; gap: 24px; }
+    .trio figure { scroll-snap-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wide">
+    <a href="index.html" class="back">← All work</a>
+    <a href="index.html"><b>Nhan Le</b></a>
+  </div>
+</nav>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <div class="read">
+    <div class="eyebrow">Self-initiated project · Lifting tracker app</div>
+    <h1>A lifting log where a repeat set is one tap, and progress shows right away</h1>
+    <p class="sub">My bet: people use a gym tracker to see progress, and logging is the price of that answer. So I designed the logging to take the fewest actions possible. Every set starts filled in from last time. A repeat set is one tap. A set one step better is two, where many trackers make you tap the number and type it again.</p>
+
+    <div class="meta">
+      <div><div class="k">Role</div><div class="v">Solo designer</div></div>
+      <div><div class="k">Platform</div><div class="v">Mobile app</div></div>
+      <div><div class="k">Focus</div><div class="v">Logging and review</div></div>
+      <div><div class="k">Status</div><div class="v">Prototype, not yet tested</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO: 3 SCREENS ================= -->
+<div class="wide">
+  <div class="trio">
+
+
+    <figure>
+      <div class="frame" role="img" aria-label="Logging screen: Bench Press finished with plus 1 rep shown. Overhead Press set 2 is selected, showing last time's 105 by 8, today's 105 by 8 already filled in, plus and minus buttons for weight and reps, and a check button.">
+        <div class="ph" style="padding-top: 52px; display: flex; flex-direction: column">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 8px">
+            <div class="circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2F3F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></div>
+            <div style="text-align: center"><p style="font-size: 15px; font-weight: 600">Push A · 18:42</p><p class="mut" style="font-size: 12px">4 of 15 sets</p></div>
+            <div style="height: 44px; padding: 0 14px; border-radius: 22px; background: #1D2122; display: flex; align-items: center; font-weight: 600">Finish</div>
+          </div>
+          <div style="padding: 0 16px">
+            <div class="card">
+              <div class="exh">
+                <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="#C8F03C" aria-hidden="true"><path d="M3.5 8.5C5 6.5 9 6.2 11.2 7.2V13C8.6 14.8 5.4 14.6 3.5 12.6Z M20.5 8.5C19 6.5 15 6.2 12.8 7.2V13C15.4 14.8 18.6 14.6 20.5 12.6Z"/></svg></span>
+                <span><span class="exn" style="display: block">Bench Press</span><span class="exs tab">175×8<span class="gain">VOL +175lb</span></span></span>
+                <span style="margin-left: auto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8F03C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="exh">
+                <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="#C8F03C" aria-hidden="true"><path d="M2.5 15C2.5 9.5 5 6.5 8.5 6.5C9.6 6.5 10.1 7.6 9.6 9C8.6 12 8.1 14 8.1 16.5Z M21.5 15C21.5 9.5 19 6.5 15.5 6.5C14.4 6.5 13.9 7.6 14.4 9C15.4 12 15.9 14 15.9 16.5Z M10.6 7.2H13.4V8.6H10.6Z"/></svg></span>
+                <span><span class="exn" style="display: block">Overhead Press</span><span class="exs tab">Last best 105×8</span></span>
+                <span class="mut tab" style="margin-left: auto; font-size: 13px">1/3</span>
+              </div>
+              <div class="grid5 colh"><span>SET</span><span>LAST</span><span style="text-align: center">LB</span><span style="text-align: center">REPS</span><span></span></div>
+              <div class="grid5 srow"><span class="mut" style="font-size: 14px; font-weight: 600">1</span><span class="l">105×8</span><span class="v">105</span><span class="v">8</span><span class="chk on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span></div>
+              <div class="sel">
+                <div class="grid5 srow"><span class="mut" style="font-size: 14px; font-weight: 600">2</span><span class="l">105×8</span><span class="v" style="text-decoration: underline; text-underline-offset: 5px; text-decoration-color: #4A5056">105</span><span class="v">8</span><span class="chk off"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span></div>
+                <div class="grid5" style="padding-bottom: 8px"><span style="grid-column: 1 / span 2"></span><span class="stp"><i>−</i><i>+</i></span><span class="stp"><i>−</i><i>+</i></span><span></span></div>
+              </div>
+              <div class="grid5 srow"><span class="mut" style="font-size: 14px; font-weight: 600">3</span><span class="l">105×6</span><span class="v mut">105</span><span class="v mut">6</span><span class="chk off"></span></div>
+            </div>
+            <div class="card"><div class="exh"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="#C8F03C" aria-hidden="true"><path d="M3.5 8.5C5 6.5 9 6.2 11.2 7.2V13C8.6 14.8 5.4 14.6 3.5 12.6Z M20.5 8.5C19 6.5 15 6.2 12.8 7.2V13C15.4 14.8 18.6 14.6 20.5 12.6Z"/></svg></span><span><span class="exn" style="display: block">Incline DB Press</span><span class="exs tab">Last best 55×10</span></span><span class="mut tab" style="margin-left: auto; font-size: 13px">0/3</span></div></div>
+            <div class="card"><div class="exh"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="#C8F03C" aria-hidden="true"><path d="M3.5 8.5C5 6.5 9 6.2 11.2 7.2V13C8.6 14.8 5.4 14.6 3.5 12.6Z M20.5 8.5C19 6.5 15 6.2 12.8 7.2V13C15.4 14.8 18.6 14.6 20.5 12.6Z"/></svg></span><span><span class="exn" style="display: block">Cable Fly</span><span class="exs tab">Last best 35×12</span></span><span class="mut tab" style="margin-left: auto; font-size: 13px">0/3</span></div></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Log</b>Today is filled in from last time. One tap logs a set.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="frame" role="img" aria-label="Review screen: 3 exercises went up, 1 stayed the same, 1 went down, with each exercise's sets and change versus last time.">
+        <div class="ph" style="padding: 52px 20px 28px; display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; align-items: center; gap: 12px"><div class="circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2F3F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></div><p style="font-size: 15px; font-weight: 600">Workout review</p></div>
+          <div><p class="gk" style="font-size: 30px; font-weight: 700; letter-spacing: -0.5px">Push A</p><p class="mut" style="font-size: 14px">Fri, Nov 20 · 54 min · 15 sets</p></div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px">
+            <div class="stat"><b class="lime">▲ 3</b><span>went up</span></div>
+            <div class="stat"><b>= 1</b><span>same</span></div>
+            <div class="stat"><b class="org">▼ 1</b><span>went down</span></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <div class="rv"><div class="top"><span>Bench Press</span><span class="lime">▲ +1 rep</span></div><div class="sets"><i>175×8</i><i>175×8</i><i>175×8</i></div></div>
+            <div class="rv"><div class="top"><span>Overhead Press</span><span class="lime">▲ +1 rep</span></div><div class="sets"><i>105×8</i><i>105×8</i><i>105×7</i></div></div>
+            <div class="rv"><div class="top"><span>Incline DB Press</span><span class="org">▼ −1 rep</span></div><div class="sets"><i>55×10</i><i>55×10</i><i class="dn">55×8</i></div></div>
+            <div class="rv"><div class="top"><span>Cable Fly</span><span class="mut">= Same</span></div><div class="sets"><i>35×12</i><i>35×12</i><i>35×12</i></div></div>
+            <div class="rv"><div class="top"><span>Triceps Pushdown</span><span class="lime">▲ +5 lb</span></div><div class="sets"><i>70×12</i><i>70×12</i><i>70×11</i></div></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Review</b>The answer they came for: what went up, and what didn't.</figcaption>
+    </figure>
+
+  </div>
+  <p class="caption">Recreated from my prototype. Sample workout data.</p>
+</div>
+
+<!-- ================= TAP COUNTS ================= -->
+<section style="padding-top: 24px">
+  <div class="wide">
+    <div class="eyebrow">Taps per set, counted in the prototype</div>
+    <div class="taps">
+      <div class="tap"><div class="num">1<span>tap</span></div><div class="what">Log a set that matches last time</div><div class="how">Tap the check.</div></div>
+      <div class="tap"><div class="num">2<span>taps</span></div><div class="what">Log a set one step better than last time</div><div class="how">+1 rep or +5 lb: tap +, then the check.</div></div>
+      <div class="tap"><div class="num">5<span>taps</span></div><div class="what">The same +5 lb with tap-and-type</div><div class="how">How many trackers do it: tap 175, type 1-8-0, tap the check.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TL;DR ================= -->
+<section style="padding-top: 0">
+  <div class="wide">
+    <div class="tldr">
+      <div><div class="k">Problem</div><p>Between sets, a lifter wants to record what they did and get back to resting. In many trackers, any change means tapping the number and typing a new one. My bet: that effort is why people quit logging.</p></div>
+      <div><div class="k">My calls</div><p>Every set starts as last time. Small changes are one tap on + or −, not typing. Big changes open a keypad that shows the plates. Progress shows the moment an exercise is done.</p></div>
+      <div><div class="k">Status</div><p>A working prototype of logging, editing and review. Not tested with users yet. Next is a test with people who quit a tracker.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 1. CONTEXT ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">01 · Context</div>
+    <h2>Logging is the cost. Progress is the product.</h2>
+    <p>This is my own project. I lift, and I wanted to test one idea: people stop using gym trackers because logging is annoying, not because the tracker lacks features.</p>
+    <p>So the scope is narrow on purpose. No social feed, no program builder, no charts. Only the two moments that happen every workout: logging a set, and seeing how today went.</p>
+  </div>
+</section>
+
+<!-- ================= 2. PROBLEM ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">02 · Problem</div>
+    <h2>Between sets, extra taps make logging feel like a chore</h2>
+    <p>I started from what the lifter is trying to do between sets, and what they already expect.</p>
+
+    <h3 class="sub-h">1. They expect today to look like last time</h3>
+    <p>Most sets are a repeat of last time, or a small step up: one more rep, or five more pounds. Many trackers already fill in last time. But a small step up still means tapping the number, typing a new one and confirming it.</p>
+
+    <div class="flow-title">Logging 5 lb more than last time</div>
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-label">Tap and type<span>how many trackers do it</span></div>
+        <div class="flow-steps"><span class="pill bad">Tap 175</span><span class="arr">→</span><span class="pill bad">Type 1</span><span class="arr">→</span><span class="pill bad">Type 8</span><span class="arr">→</span><span class="pill bad">Type 0</span><span class="arr">→</span><span class="pill bad">Tap the check</span></div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-label">This design<span>+ and − on the set</span></div>
+        <div class="flow-steps"><span class="pill good">Tap +</span><span class="arr">→</span><span class="pill good">Tap the check</span></div>
+      </div>
+    </div>
+    <p class="caption">Tap and type is shown as a common pattern. It is not a count from a specific app.</p>
+
+    <h3 class="sub-h">2. They hesitate on two questions</h3>
+    <p>"What did I do last time?" and "Which plates make 180?" Both make the lifter stop, think, or leave the screen to find the answer. The design puts both answers where the lifter already looks.</p>
+  </div>
+</section>
+
+<!-- ================= 3. THE CALLS ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">03 · The calls</div>
+    <h2>Make the common case one tap, and keep the rest close</h2>
+  </div>
+
+  <div class="wide">
+
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 1</div>
+        <h3>Every set starts as last time</h3>
+        <p>Today's weight and reps are filled in from the last workout, and last time's numbers sit in their own column beside them. If the lifter did the same, they tap the check. If they did one step more, they tap + first. No typing.</p>
+        <dl class="call-notes">
+          <div><dt>Why</dt><dd>It matches what the lifter already expects. The app does the remembering, so the lifter doesn't have to.</dd></div>
+          <div><dt>Tradeoff</dt><dd>A quick tap can log last time's numbers by mistake. To keep that cheap to fix, editing the weight of a logged set un-checks it, so the lifter confirms it again.</dd></div>
+        </dl>
+      </div>
+      <div class="frame short" style="height: 440px" role="img" aria-label="Close-up of Overhead Press: Last column shows 105 by 8; today shows 105 and 8 already filled in; set 2 is selected with plus and minus buttons.">
+        <div class="ph" style="padding: 40px 16px 0">
+          <div class="card" style="border-bottom: 0">
+            <div class="exh">
+              <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="#C8F03C" aria-hidden="true"><path d="M2.5 15C2.5 9.5 5 6.5 8.5 6.5C9.6 6.5 10.1 7.6 9.6 9C8.6 12 8.1 14 8.1 16.5Z M21.5 15C21.5 9.5 19 6.5 15.5 6.5C14.4 6.5 13.9 7.6 14.4 9C15.4 12 15.9 14 15.9 16.5Z M10.6 7.2H13.4V8.6H10.6Z"/></svg></span>
+              <span><span class="exn" style="display: block">Overhead Press</span><span class="exs tab">Last best 105×8</span></span>
+              <span class="mut tab" style="margin-left: auto; font-size: 13px">1/3</span>
+            </div>
+            <div class="grid5 colh"><span>SET</span><span>LAST</span><span style="text-align: center">LB</span><span style="text-align: center">REPS</span><span></span></div>
+            <div class="grid5 srow"><span class="mut" style="font-size: 14px; font-weight: 600">1</span><span class="l">105×8</span><span class="v">105</span><span class="v">8</span><span class="chk on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span></div>
+            <div class="sel">
+              <div class="grid5 srow"><span class="mut" style="font-size: 14px; font-weight: 600">2</span><span class="l">105×8</span><span class="v">105</span><span class="v">8</span><span class="chk off"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span></div>
+              <div class="grid5" style="padding-bottom: 8px"><span style="grid-column: 1 / span 2"></span><span class="stp"><i>−</i><i>+</i></span><span class="stp"><i>−</i><i>+</i></span><span></span></div>
+            </div>
+            <div class="grid5 srow"><span class="mut" style="font-size: 14px; font-weight: 600">3</span><span class="l">105×6</span><span class="v mut">105</span><span class="v mut">6</span><span class="chk off"></span></div>
+          </div>
+          <div style="margin-top: 36px; display: grid; gap: 18px; font-size: 15px">
+            <p><span class="lbl lime" style="display: block; margin-bottom: 4px">LAST</span>Last time, beside today. No need to look it up.</p>
+            <p><span class="lbl lime" style="display: block; margin-bottom: 4px">LB · REPS</span>Already filled in from last time.</p>
+            <p><span class="lbl lime" style="display: block; margin-bottom: 4px">− +</span>One step up or down, only on the set you're on.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 2</div>
+        <h3>Big changes open a keypad that shows the plates</h3>
+        <p>For a weight that isn't one step away, the lifter taps the number to open a keypad. It shows the change against last time, the plates to load on each side, quick steps, and the weights they often use.</p>
+        <dl class="call-notes">
+          <div><dt>Why</dt><dd>It answers "which plates make 180?" on the same screen, so the lifter doesn't do the math in their head or check another app.</dd></div>
+          <div><dt>Tradeoff</dt><dd>The keypad holds a lot. Worth it because it only opens when the lifter needs it. The common case never sees it.</dd></div>
+        </dl>
+      </div>
+      <div class="frame" role="img" aria-label="Weight keypad: 180 lb, plus 5 lb versus last time; a barbell showing 45, 10, 10 and 2.5 lb plates on each side; quick steps minus 10, minus 5, plus 5, plus 10; often used 175, 180, 185; a number pad; and a Set 180 lb button.">
+        <div class="ph" style="overflow: hidden">
+          <div style="padding: 52px 20px 0; opacity: .35" aria-hidden="true"><p class="gk" style="font-size: 30px; font-weight: 700">Bench Press</p><p class="mut" style="font-size: 14px">Last time: 175×8, 175×8, 175×7</p></div>
+          <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #1D2122; border-radius: 28px 28px 0 0; padding: 12px 20px 24px; display: flex; flex-direction: column; gap: 12px">
+            <div style="width: 40px; height: 5px; border-radius: 3px; background: #3A3F45; align-self: center"></div>
+            <p style="font-size: 15px; font-weight: 600">Set 3 · Weight</p>
+            <div style="text-align: center">
+              <p class="gk tab" style="font-size: 56px; font-weight: 700; letter-spacing: -1px; line-height: 1.1">180<span class="mut" style="font-size: 22px; margin-left: 8px">lb</span></p>
+              <p class="lime" style="font-size: 13px">▲ +5 lb vs last time (175)</p>
+            </div>
+            <div style="height: 88px; border-radius: 16px; background: #131514; display: flex; align-items: center; justify-content: center">
+              <div style="width: 14px; height: 10px; border-radius: 2px 0 0 2px; background: #6B7177"></div>
+              <div class="plate" style="width: 19px; height: 26px; background: #465416; color: #F2F3F0">2.5</div>
+              <div class="plate" style="width: 19px; height: 40px; background: #768F25">10</div>
+              <div class="plate" style="width: 19px; height: 40px; background: #768F25">10</div>
+              <div class="plate" style="width: 22px; height: 64px; background: #C8F03C">45</div>
+              <div style="width: 6px; height: 18px; border-radius: 2px; background: #9BA1A6; margin: 0 2px"></div>
+              <div style="width: 90px; height: 6px; background: #6B7177"></div>
+              <div style="width: 6px; height: 18px; border-radius: 2px; background: #9BA1A6; margin: 0 2px"></div>
+              <div class="plate" style="width: 22px; height: 64px; background: #C8F03C">45</div>
+              <div class="plate" style="width: 19px; height: 40px; background: #768F25">10</div>
+              <div class="plate" style="width: 19px; height: 40px; background: #768F25">10</div>
+              <div class="plate" style="width: 19px; height: 26px; background: #465416; color: #F2F3F0">2.5</div>
+              <div style="width: 14px; height: 10px; border-radius: 0 2px 2px 0; background: #6B7177"></div>
+            </div>
+            <p class="lbl">QUICK STEPS</p>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px"><span class="qs">−10</span><span class="qs">−5</span><span class="qs">+5</span><span class="qs">+10</span></div>
+            <p class="lbl">YOU OFTEN USE</p>
+            <div style="display: flex; gap: 8px"><span class="chip">175</span><span class="chip" style="border-color: #C8F03C">180</span><span class="chip">185</span></div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px"><span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span><span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key">.</span><span class="key">0</span><span class="key">⌫</span></div>
+            <div class="cta">Set 180 lb</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 3</div>
+        <h3>Show progress the moment it happens</h3>
+        <p>When the last set of an exercise is logged, its card shows what went up: top weight, estimated max or total volume. At the end, the review sorts the workout into went up, same and went down, and marks the set that dropped.</p>
+        <dl class="call-notes">
+          <div><dt>Why</dt><dd>"Am I getting stronger?" is the reason to log at all. Answering it right away gives the lifter a reason to log the next set too.</dd></div>
+          <div><dt>Tradeoff</dt><dd>The review compares with last time only, not with months of history. That keeps it a one-glance answer. Long-term charts can come later.</dd></div>
+        </dl>
+      </div>
+      <div class="frame short" style="height: 330px" role="img" aria-label="Finished exercise cards. Bench Press: VOL plus 175 lb. Triceps Pushdown: WGT plus 5 lb, 1RM plus 7 lb, VOL plus 110 lb.">
+        <div class="ph" style="padding: 40px 16px 0">
+          <div class="card"><div class="exh"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="#C8F03C" aria-hidden="true"><path d="M3.5 8.5C5 6.5 9 6.2 11.2 7.2V13C8.6 14.8 5.4 14.6 3.5 12.6Z M20.5 8.5C19 6.5 15 6.2 12.8 7.2V13C15.4 14.8 18.6 14.6 20.5 12.6Z"/></svg></span><span><span class="exn" style="display:block">Bench Press</span><span class="exs tab">175×8<span style="margin-left:8px"><span class="gain" style="margin-left:0;margin-right:10px">VOL +175lb</span></span></span></span><span style="margin-left:auto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8F03C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span></div></div>
+          <div class="card"><div class="exh"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="#C8F03C" fill-rule="evenodd" aria-hidden="true"><path d="M8.5 3H15.5V12C15.5 15.6 14 18.5 12 18.5C10 18.5 8.5 15.6 8.5 12Z M10.8 3H13.2V11.4C13.2 12.6 12.7 13.6 12 13.6C11.3 13.6 10.8 12.6 10.8 11.4Z"/></svg></span><span><span class="exn" style="display:block">Triceps Pushdown</span><span class="exs tab">70×12<span style="margin-left:8px"><span class="gain" style="margin-left:0;margin-right:10px">WGT +5lb</span><span class="gain" style="margin-left:0;margin-right:10px">1RM +7lb</span><span class="gain" style="margin-left:0;margin-right:10px">VOL +110lb</span></span></span></span><span style="margin-left:auto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8F03C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span></div></div>
+          <div style="margin-top: 30px; display: grid; gap: 18px; font-size: 15px">
+            <p><span class="lbl lime" style="display: block; margin-bottom: 4px">WGT · 1RM · VOL</span>Top weight, estimated max and total weight lifted, each compared with last time.</p>
+            <p><span class="lbl lime" style="display: block; margin-bottom: 4px">WHEN</span>Shows the moment the last set of the exercise is logged.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="read">
+    <h3 class="sub-h">Changing the plan without leaving the workout</h3>
+    <p>Gyms are busy, and plans change. The prototype handles that on the same screen:</p>
+    <ul class="list">
+      <li>Swipe a set to remove it, with Undo.</li>
+      <li>Hold and drag an exercise to reorder it.</li>
+      <li>Replace an exercise from ones you've done before, each shown with when you last did it and your last weights.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 4. NEXT ================= -->
+<section>
+  <div class="read">
+    <div class="eyebrow">04 · What I'd do next</div>
+    <h2>Test it with people who quit a tracker</h2>
+    <p>The prototype works end to end, but nobody outside of me has used it yet. The idea is only proven when someone else logs a workout with it.</p>
+    <ul class="list">
+      <li><b>Who:</b> five lifters who stopped using a tracker. They know exactly what annoyed them.</li>
+      <li><b>What to measure:</b> taps and seconds per set, in this design and in the tracker they used.</li>
+      <li><b>What to watch:</b> where they hesitate, and whether the review answers "did I improve?" without help.</li>
+      <li><b>It works if:</b> 4 of 5 log a full workout without help, with fewer taps per set than their old tracker.</li>
+    </ul>
+    <p class="disclaimer" style="margin-top: 40px">Self-initiated concept. Screens recreated from my working prototype, with sample workout data.</p>
+  </div>
+</section>
+
+<div class="next">
+  <div class="read">
+    <div class="eyebrow">Next case study</div>
+    <a href="case-study.html"><div class="t">Made the chatbot form show creators what makes a good bot →</div></a>
+  </div>
+</div>
+
+</body>
+</html>
