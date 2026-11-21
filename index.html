@@ -55,6 +55,7 @@
   .offer h3 { font-size: 20px; line-height: 1.3; margin-bottom: 12px; }
   .offer .label { color: var(--muted); font-size: 15px; line-height: 1.6; }
   .offer .proofline { align-self: start; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--text); font-size: 14px; }
+  .card .proofline { font-size: 13px; color: var(--text); margin: 8px 0 0; }
   .card { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; text-decoration: none; transition: transform .15s ease, box-shadow .15s ease; }
   .card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
   .card .thumb { background: #ecebe8; min-height: 300px; display: flex; align-items: center; justify-content: center; color: #9a9a9a; font-size: 14px; text-align: center; padding: 20px; }
@@ -112,7 +113,7 @@
 <header class="hero">
   <div class="wrap">
     <h1>I find the UX problems costing you users, and fix them.</h1>
-    <p class="sub">Product designer for consumer apps. Most recently the sole designer on an AI chat platform, owning UX across the whole product.</p>
+    <p class="sub">Product designer. Most recently the sole designer on an AI chat platform, owning UX across the whole product.</p>
     <div class="links">
       <a class="btn primary" href="#work">See the work</a>
       <a class="btn" href="mailto:nhanle.ux@gmail.com">Email me</a>
@@ -129,12 +130,12 @@
       <div>
         <h3>Your roadmap, plus the problems nobody flagged</h3>
         <p class="label">You get the features you've planned, plus a tested fix wherever users are getting stuck, even where nobody has reported it yet.</p>
-        <p class="label proofline"><b>Proof:</b> redesigned a chatbot creation form and tested it with a large beta group.</p>
+        <p class="label proofline"><b>Proof:</b> a vague "make the form easier to read" brief, where I found the real problem: the fields that make a bot good were hidden.</p>
       </div>
       <div>
         <h3>Tested before it's built</h3>
         <p class="label">Ideas get prototyped and checked with real users before any engineering time goes into them.</p>
-        <p class="label proofline"><b>Proof:</b> a beta-tested chatbot form, and a working prototype of a lifting log.</p>
+        <p class="label proofline"><b>Proof:</b> a setup form tested as a prototype before it was built, and a working prototype of a lifting log.</p>
       </div>
       <div>
         <h3>Less for you to manage</h3>
@@ -155,9 +156,22 @@
         <div class="thumb has-img"><img src="img/hero.png" alt="The redesigned chatbot form: Advanced section with a quality bar and ghost previews of add-ons."></div>
         <div class="body">
           <div class="company">AI chat platform · Chatbot creation form</div>
-          <h3>Made the chatbot form show creators what makes a good bot</h3>
-          <p>Key fields were hidden and add-ons didn't explain themselves, so creators could publish with just the basics. Ghost previews and a quality bar showed them what to add, and why.</p>
-          <div class="tags"><span>Creator Tools</span><span>Complex Forms</span><span>Progressive Disclosure</span><span>Beta Testing</span></div>
+          <h3>Made a long setup form show users what to fill in, and why</h3>
+          <p>The brief was vague. I found the real problem: key fields were hidden and add-ons didn't explain themselves. Ghost previews and a quality bar fixed both.</p>
+          <p class="proofline"><b>Beta-tested · 1 week from brief to tested design · 0 new backend</b></p>
+          <div class="tags"><span>Setup Flows</span><span>Complex Forms</span><span>Progressive Disclosure</span><span>Beta Testing</span></div>
+          <span class="cta">Read case study →</span>
+        </div>
+      </a>
+
+      <a href="discover.html" class="card">
+        <div class="thumb has-img"><img src="img/discover-hero.png" alt="The Discover page: a feature banner, then rows of bots by genre and topic." style="object-position: 50% 0%"></div>
+        <div class="body">
+          <div class="company">AI chat platform · Discover page</div>
+          <h3>Designed a way to browse for people who don't know what they want yet</h3>
+          <p>New users left the homepage without a click. One trending list made the site look like one kind of bot. Rows by genre and topic let people sample before they commit.</p>
+          <p class="proofline"><b>Shipped · No major revisions needed after launch · Beta-tested</b></p>
+          <div class="tags"><span>Information Architecture</span><span>New-User Experience</span><span>Shipped</span></div>
           <span class="cta">Read case study →</span>
         </div>
       </a>
@@ -167,7 +181,8 @@
         <div class="body">
           <div class="company">Self-initiated project · Lifting tracker app</div>
           <h3>A lifting log where a repeat set is one tap, and progress shows right away</h3>
-          <p>A self-initiated concept, not yet tested. Each set starts filled in from last time, so a repeat set is one tap. The review shows what went up, what stayed the same, and what went down.</p>
+          <p>Each set starts filled in from last time, so a repeat set is one tap. The review shows what went up, what stayed the same, and what went down.</p>
+          <p class="proofline"><b>1 tap for a repeat set, 2 for a step up (vs 5 with tap-and-type) · Prototype, not yet tested</b></p>
           <div class="tags"><span>Mobile</span><span>Logging UX</span><span>Interaction Design</span><span>Working Prototype</span></div>
           <span class="cta">Read case study →</span>
         </div>

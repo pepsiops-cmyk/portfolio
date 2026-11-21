@@ -117,7 +117,15 @@
   .next .t:hover { color: var(--accent); }
 
 
+  /* Proof strip */
+  .taps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 28px; }
+  .tap { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 22px 20px; }
+  .tap .num { font-size: 44px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  .tap .num span { font-size: 18px; font-weight: 600; color: var(--muted); letter-spacing: 0; margin-left: 6px; }
+  .tap .what { font-size: 16px; font-weight: 600; margin-top: 10px; line-height: 1.4; }
+  .tap .how { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
   @media (max-width: 800px) {
+    .taps { grid-template-columns: 1fr; }
     .meta { grid-template-columns: 1fr 1fr; }
     .tldr, .options, .options.two, .results, .pair { grid-template-columns: 1fr; }
     .flow-row { grid-template-columns: 1fr; }
@@ -138,14 +146,14 @@
 <header class="header">
   <div class="read">
     <div class="eyebrow">AI chat platform · Chatbot creation form</div>
-    <h1>Made the chatbot form show creators what makes a good bot</h1>
-    <p class="sub">The form hid its most useful parts: add-ons behind blank "Attach" buttons, and key fields behind a button most people missed. I redesigned both, with ghost previews that explain each add-on and a quality bar that shows creators how complete their chatbot is.</p>
+    <h1>Made a long setup form show users what to fill in, and why</h1>
+    <p class="sub">The brief was vague: make the chatbot form easier to read. I found the real problem: the fields that make a bot good were hidden, and add-ons didn't explain themselves. Ghost previews and a quality bar fixed both.</p>
 
     <div class="meta">
       <div><div class="k">Role</div><div class="v">Sole Product Designer</div></div>
       <div><div class="k">Team</div><div class="v">PM, CEO</div></div>
-      <div><div class="k">Timeline</div><div class="v">1-week sprint · 2026</div></div>
-      <div><div class="k">Platform</div><div class="v">Web + mobile</div></div>
+      <div><div class="k">Brief</div><div class="v">Open-ended, from the PM</div></div>
+      <div><div class="k">Status</div><div class="v">Beta-tested · I left before launch</div></div>
     </div>
   </div>
 </header>
@@ -154,13 +162,25 @@
   <img class="shot" src="img/hero.png" alt="The redesigned form: the Advanced section open with a quality bar under its header, an attached lorebook, and faded previews of a rule set and a voice.">
 </div>
 
+<!-- ================= PROOF ================= -->
+<section style="padding-top: 24px">
+  <div class="wide">
+    <div class="eyebrow">In numbers</div>
+    <div class="taps">
+      <div class="tap"><div class="num">1<span>week</span></div><div class="what">From a vague brief to a tested design</div><div class="how">I found the real problem while designing one new button.</div></div>
+      <div class="tap"><div class="num">1<span>step</span></div><div class="what">To understand an add-on, down from 5</div><div class="how">Mapped from the old flow: see "Attach", wonder, click, pick, see "Attached".</div></div>
+      <div class="tap"><div class="num">0</div><div class="what">New backend needed</div><div class="how">The quality bar runs on token count, right in the form.</div></div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= TL;DR ================= -->
-<section>
+<section style="padding-top: 0">
   <div class="wide">
     <div class="tldr">
       <div><div class="k">Problem</div><p>The fields that make a chatbot good were hidden behind a button most creators missed, and the add-ons were blank "Attach" buttons nobody understood. Creators could publish with just the basics.</p></div>
       <div><div class="k">My calls</div><p>Show, don't describe: ghost previews explain each add-on. Then give creators a reason to fill in more: a quality bar based on how much of the bot's text budget they've used.</p></div>
-      <div><div class="k">Result</div><p>Designed in a one-week sprint and tested with a large group of beta testers, with consistently positive reactions. Built to need no new backend. I left before it shipped.</p></div>
+      <div><div class="k">Result</div><p>Beta-tested: testers said the form was easier to scan, and they understood each add-on before attaching it. One week from a vague brief to a tested design, with no new backend needed. I left before it shipped.</p></div>
     </div>
   </div>
 </section>
@@ -341,7 +361,7 @@
 <div class="next">
   <div class="read">
     <div class="eyebrow">Next case study</div>
-    <a href="tracker.html"><div class="t">A lifting log where a repeat set is one tap, and progress shows right away →</div></a>
+    <a href="discover.html"><div class="t">Designed a way to browse for people who don't know what they want yet →</div></a>
   </div>
 </div>
 
