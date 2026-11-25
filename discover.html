@@ -60,7 +60,7 @@
   .call-notes dt { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; color: var(--muted); }
   .call-notes dd { font-size: 15px; line-height: 1.6; margin-top: 2px; }
 
-  .results { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 28px; }
+  .results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 28px; }
   .results .num { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; }
   .results .label { font-size: 15px; color: var(--muted); }
 
@@ -193,7 +193,7 @@
 
     <div class="meta">
       <div><div class="k">Role</div><div class="v">Sole Product Designer</div></div>
-      <div><div class="k">Team</div><div class="v">PM, CEO</div></div>
+      <div><div class="k">Team</div><div class="v">PM, leadership</div></div>
       <div><div class="k">Brief</div><div class="v">From leadership</div></div>
       <div><div class="k">Status</div><div class="v">Shipped after beta testing</div></div>
     </div>
@@ -225,7 +225,7 @@
     <div class="taps">
       <div class="tap"><div class="num">Shipped</div><div class="what">As a new Discover page</div><div class="how">In the live product, after beta testing.</div></div>
       <div class="tap"><div class="num">0</div><div class="what">Major changes needed after beta testing</div><div class="how">It held up with real users as designed.</div></div>
-      <div class="tap"><div class="num">Beta-tested</div><div class="what">Testers said rows made finding a bot easier</div><div class="how">They could pick a direction before diving in.</div></div>
+      <div class="tap"><div class="num">5,000+</div><div class="what">Lorebooks and groups made by users</div><div class="how">About 4,000 lorebooks and 1,000 groups, the 2 content types the rows put next to chatbots.</div></div>
     </div>
   </div>
 </section>
@@ -235,7 +235,7 @@
   <div class="wide">
     <div class="tldr">
       <div><div class="k">Problem</div><p>New users left the homepage without clicking anything. It was one list sorted by trending, so whatever was popular filled the screen and the site looked like it offered one kind of bot.</p></div>
-      <div><div class="k">My calls</div><p>Rows by genre and topic, so no single sort decides the whole first screen. A row for new bots, so they don't get buried. A new card where the art leads. Shipped as a separate page, after I'd recommended the homepage.</p></div>
+      <div><div class="k">My calls</div><p>Rows by genre and topic, so no single sort decides the whole first screen. Groups and lorebooks in rows next to chatbots, not hidden in tabs. A row for new bots, so they don't get buried. A new card where the art leads. Shipped as a separate page, after I'd recommended the homepage.</p></div>
       <div><div class="k">Result</div><p>Shipped as a new Discover page after beta testing. Beta testers liked it: rows let them figure out what they were into before diving in. Merging it into the homepage is still to come.</p></div>
     </div>
   </div>
@@ -308,6 +308,25 @@
     <div class="call">
       <div class="call-text">
         <div class="eyebrow">Call 2</div>
+        <h3>Put groups and lorebooks next to chatbots</h3>
+        <p>Two newer content types, groups and lorebooks, sat in their own tabs. Most users never opened those tabs, so they never saw them. I gave each one a row on the same page as chatbots, so users find them while they browse.</p>
+        <dl class="call-notes">
+          <div><dt>Why</dt><dd>Separate tabs were what kept them hidden. A row puts them where users already look.</dd></div>
+          <div><dt>Tradeoff</dt><dd>Mixed content types on one page can feel busy. Worth it because each row has a clear title, so users always know what kind of thing they are looking at.</dd></div>
+        </dl>
+      </div>
+      <div class="screen" role="img" aria-label="Recreated rows: chatbots, then a Lorebooks row and a Groups row on the same page.">
+        <div class="rows">
+          <div><div class="row-h">Fantasy<span style="margin-left:auto">See all</span></div><div class="row g-fant"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+          <div><div class="row-h">Lorebooks<span style="margin-left:auto">See all</span></div><div class="row g-sci"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+          <div><div class="row-h">Groups<span style="margin-left:auto">See all</span></div><div class="row g-hor"><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div><div class="bot"><div class="art"></div><div class="t1"></div></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="call">
+      <div class="call-text">
+        <div class="eyebrow">Call 3</div>
         <h3>Give new bots a row of their own</h3>
         <p>In one big list, a newly created bot lands at the bottom of the pile. A "New this week" row gives fresh bots a place to be seen, and gives users something different from the usual trending picks.</p>
         <dl class="call-notes">
@@ -323,7 +342,7 @@
 
     <div class="call">
       <div class="call-text">
-        <div class="eyebrow">Call 3</div>
+        <div class="eyebrow">Call 4</div>
         <h3>A card where the art leads</h3>
         <p>The redesign came with a new bot card. The art got taller and takes up more of the card, and the bot's name moved onto the image. The card also got more compact, so more bots fit in each row.</p>
         <dl class="call-notes">
@@ -360,7 +379,7 @@
 
     <div class="call">
       <div class="call-text">
-        <div class="eyebrow">Call 4</div>
+        <div class="eyebrow">Call 5</div>
         <h3>Ship it as its own page first</h3>
         <p>I recommended putting the rows on the homepage itself, since that's where new users were leaving. Leadership chose to keep the homepage the same for everyone and launch the rows as a separate Discover page, then merge the two later, because users tend to dislike sudden change.</p>
         <dl class="call-notes">
@@ -405,6 +424,7 @@
     <div class="results">
       <div><div class="num">Shipped</div><div class="label">as a new Discover page in the live product, after beta testing</div></div>
       <div><div class="num">Beta-tested</div><div class="label">testers liked the rows and said they made finding a bot easier</div></div>
+      <div><div class="num">5,000+</div><div class="label">lorebooks and groups made by users: about 4,000 lorebooks and 1,000 groups</div></div>
     </div>
     <p style="margin-top:28px">Testers said rows let them figure out what they were into before diving deeper, instead of scanning a list with no idea what to look for.</p>
     <p>The homepage stayed as it was, including the old card, and its sort options now work more like a search page for people who already know what they want. The merge into the homepage hasn't happened yet, so new users still land on the old homepage. That's why there's no data yet on whether it brings bounce down.</p>
